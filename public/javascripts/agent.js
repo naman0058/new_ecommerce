@@ -29,7 +29,6 @@ function makeTable(categories){
 <th>Name</th>
 <th>Email</th>
 <th>Number</th>
-<th>Discount</th>
 <th>Role</th>
 <th>Status</th>
 
@@ -48,7 +47,6 @@ table+=`<tr>
 <td>${item.name}</td>
 <td>${item.email}</td>
 <td>${item.number}</td>
-<td>${item.discount}</td>
 <td>${item.role}</td>
 <td>${item.status}</td>
 
@@ -98,7 +96,6 @@ $('#result').on('click', '.edits', function() {
      $('#pstatus').val(result.status)
      $('#ppassword').val(result.password)
      $('#prole').val(result.role)
-     $('#pdiscount').val(result.discount)
 
    
  })
@@ -124,7 +121,6 @@ $('#update').click(function(){  //data insert in database
         status: $('#pstatus').val(),
         password: $('#ppassword').val(),
         role: $('#prole').val(),
-        discount: $('#pdiscount').val()
 
        
         }
