@@ -26,11 +26,17 @@
                                     <div class="basic-form">
                                         <form action="/admin/dashboard/store-listing/coupon/insert" method="POST" enctype="multipart/form-data" class="uploadImage">
                                                <div class="form-row">
-                                                <div class="col-6">
-                                                    <label>Coupon Name</label>
-                                                    <input type="text" class="form-control" name="name" placeholder="Coupon Name">
+                                                <div class="col-4">
+                                                    <label>Coupon Code</label>
+                                                    <input type="text" class="form-control" name="code" placeholder="Coupon Code">
                                                 </div>
-                                                <div class="col-6">
+
+                                                <div class="col-4">
+                                                    <label>Discount (In percentage)</label>
+                                                    <input type="text" class="form-control" name="discountPercentage" placeholder="Discount">
+                                                </div>
+
+                                                <div class="col-4">
                                                     <label>Coupon Image</label>
                                                     <input type="file" class="form-control" name="image" placeholder="State">
                                                 </div>
@@ -82,18 +88,34 @@
                             <div class="card-body">    
                                     <div class="basic-form">
                                                <div class="form-row">
-                                                <div class="col-6">
+                                                <div class="col-12">
                                                     <label>Coupon ID</label>
                                                     <input type="text" class="form-control" id="pid" readonly>
                                                 </div>
                                              
-                                                <div class="col-6">
-                                                    <label>Coupon Name</label>
-                                                    <input type="text" class="form-control" id="pname" placeholder="Coupon Name">
-                                                </div>
+                                             
                                                
                                               
                                             </div>
+
+
+                                            <div class="form-row">
+                                                <div class="col-6">
+                                                    <label>Coupon Code</label>
+                                                    <input type="text" class="form-control" id="pcode" placeholder="Coupon Code">
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <label>Discount (In percentage)</label>
+                                                    <input type="text" class="form-control" id="pdiscountPercentage" placeholder="Discount">
+                                                </div>
+
+
+                                                
+
+                                              
+                                            </div>
+
                                <button class="btn btn-primary" type="button" id="update" style="margin-top:20px;float:right">Update</button>
 
                                     </div>
