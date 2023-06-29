@@ -29,6 +29,7 @@ function makeTable(categories){
 <th>Name</th>
 <th>Number</th>
 <th>Adress</th>
+<th>Discount</th>
 <th>GST</th>
 <th>Options</th>
 </tr>
@@ -44,6 +45,7 @@ table+=`<tr>
 <td>${item.name}</td>
 <td>${item.number}</td>
 <td>${item.address}</td>
+<td>${item.discount}</td>
 <td>${item.gst}</td>
 
 <td>
@@ -89,6 +91,8 @@ $('#result').on('click', '.edits', function() {
      $('#pnumber').val(result.number)
      $('#paddress').val(result.address)
      $('#pgst').val(result.gst)
+     $('#pdiscount').val(result.discount)
+
    
  })
 
@@ -111,6 +115,8 @@ $('#update').click(function(){  //data insert in database
         number: $('#pnumber').val(),
         address: $('#paddress').val(),
         gst: $('#pgst').val(),
+        discount: $('#pdiscount').val(),
+
       
        
         }
