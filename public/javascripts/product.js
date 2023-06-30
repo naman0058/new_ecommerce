@@ -52,6 +52,9 @@ function makeTable(categories){
 <thead>
 <tr>
 <th>Image</th>
+<th>Product Code</th>
+<th>Style Code</th>
+
 <th>Category</th>
 <th>Name</th>
 <th>Price</th>
@@ -72,6 +75,8 @@ table+=`<tr>
 </td>
 
 
+<td>${item.product_code}</td>
+<td>${item.style_code}</td>
     
 <td>${item.categoryname}</td>
 <td>${item.name}</td>
@@ -130,6 +135,10 @@ $('#result').on('click', '.edits', function() {
      $('#psmall_description').val(result.small_description)
      $('#pkeyword').val(result.keyword)
      $('#pcategoryid').val(result.categoryid)
+
+     $('#pproduct_code').val(result.product_code)
+     $('#pstyle_code').val(result.style_code)
+
     
      $('#pdiscount').val(result.discount)
      let table = `<p>${result.description}</p>
@@ -161,7 +170,9 @@ $('#update').click(function(){  //data insert in database
        small_description : $('#psmall_description').val(),
        keyword : $('#pkeyword').val(),
        discount : $('#pdiscount').val(),
-       categoryid :$('#pcategoryid').val()
+       categoryid :$('#pcategoryid').val(),
+       product_code :$('#pproduct_code').val(),
+       style_code :$('#pstyle_code').val()
 
 
        

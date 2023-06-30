@@ -456,7 +456,7 @@ function importExcelData2MySQL(filePath){
     // `rows` is an array of rows
     // each row being an array of cells.     
     console.log('saahahs',rows);
-let query = 'INSERT INTO product (name, categoryid, small_description, price, quantity, keyword) VALUES ?';
+let query = 'INSERT INTO product (product_code, style_code, name, categoryid, small_description, price, quantity, keyword) VALUES ?';
 
     pool.query(query,[rows],(err,result)=>{
         if(err) console.log(err)
