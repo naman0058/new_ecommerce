@@ -23,6 +23,8 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="table-responsive">
+        <button type="button" class="btn btn-primary float-right" id="exportBtn" style="float: right;margin-bottom:20px">Export Data</button>
+
                                     <table id="example" class="display" style="min-width: 845px">
                                         <thead>
                                             <tr>
@@ -319,8 +321,21 @@
     <script src="/Admin/main/./js/plugins-init/jquery.bootgrid-init.js"></script>
     <script src="/Admin/main/./js/plugins-init/datatables.init.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
 
 
+    <script>
+        $('#exportBtn').click(function(){
+             
+    TableToExcel.convert(document.getElementById("example"), {
+        name: "Report.xlsx",
+        sheet: {
+        name: "Sheet1"
+        }
+      });
+    });
+    
+    </script>
 </body>
 
 

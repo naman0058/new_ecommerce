@@ -265,42 +265,31 @@ router.post('/store-listing/:name/update-image',upload.fields([{ name: 'image', 
 router.get('/orders/:type',(req,res)=>{
     if(req.params.type == 'runnning'){
        pool.query(`select b.* , 
-       (select p.name from product p where p.id = b.bookingid) as bookingname,
-       (select c.name from client c where c.id = b.clientid) as name,
-       (select c.number from client c where c.id = b.clientid) as number,
-       (select c.address from client c where c.id = b.clientid) as address,
-       (select v.name from agent v where v.id = b.agentid) as agentname,
-    (select p.image from product p where p.id = b.bookingid) as bookingimage
+       (select c.code from client c where c.id = b.clientid) as clientcode,
+       (select a.name from agent a where a.id = b.agentid) as agentname,
+    (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
 
-   
-       from booking b where b.status != 'completed' and b.status != 'cancelled'  order by id desc`,(err,result)=>{
+       from final_booking b where b.status != 'completed' and b.status != 'cancelled'  order by id desc`,(err,result)=>{
            err ? console.log(err) : res.render('Admin/order',{result, title:'Running Orders',msg:'running'})
        })
     }
     else if(req.params.type=='completed'){
        pool.query(`select b.* , 
-       (select p.name from product p where p.id = b.bookingid) as bookingname,
-       (select c.name from client c where c.id = b.clientid) as name,
-       (select c.number from client c where c.id = b.clientid) as number,
-       (select c.address from client c where c.id = b.clientid) as address,
-       (select v.name from agent v where v.id = b.agentid) as agentname,
-    (select p.image from product p where p.id = b.bookingid) as bookingimage
+       (select c.code from client c where c.id = b.clientid) as clientcode,
+       (select a.name from agent a where a.id = b.agentid) as agentname,
+    (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
+
    
-       from booking b where b.status = 'completed'  order by id desc`,(err,result)=>{
+       from final_booking b where b.status = 'completed'  order by id desc`,(err,result)=>{
            err ? console.log(err) : res.render('Admin/order',{result, title:'Completed Orders',msg:'completed'})
        })
     }
     else {
        pool.query(`select b.* , 
-       (select p.name from product p where p.id = b.bookingid) as bookingname,
-       (select c.name from client c where c.id = b.clientid) as name,
-       (select c.number from client c where c.id = b.clientid) as number,
-       (select c.address from client c where c.id = b.clientid) as address,
-       (select v.name from agent v where v.id = b.agentid) as agentname,
-    (select p.image from product p where p.id = b.bookingid) as bookingimage
-
-   
-       from booking b where b.status = 'cancelled'  order by id desc`,(err,result)=>{
+    (select c.code from client c where c.id = b.clientid) as clientcode,
+    (select a.name from agent a where a.id = b.agentid) as agentname,
+    (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
+    from final_booking b where b.status = 'cancelled'  order by id desc`,(err,result)=>{
            err ? console.log(err) : res.render('Admin/order',{result, title:'Cancelled Orders',msg:'cancel'})
        })
     }
@@ -330,10 +319,16 @@ router.get('/orders/:type',(req,res)=>{
     
 
 
-    pool.query(`update booking set status = 'completed' , updated_date = '${today}'  where id = '${req.query.id}'`,(err,result)=>{
+    pool.query(`update booking set status = 'completed' , updated_date = '${today}'  where orderid = '${req.query.orderid}'`,(err,result)=>{
         if(err) throw err;
         else {
+          pool.query(`update final_booking set status = 'completed' , updated_date = '${today}' where orderid = '${req.query.orderid}'`,(err,result)=>{
+            if(err) throw err;
+            else{
          res.redirect('/admin/dashboard/orders/runnning')
+
+            }
+          })
         }
     })
 
@@ -403,12 +398,10 @@ router.get('/view-client',(req,res)=>{
 
    router.get('/reports',(req,res)=>{
     var query = `select b.* , 
-    (select p.name from product p where p.id = b.bookingid) as bookingname,
-    (select c.name from client c where c.id = b.clientid) as name,
-    (select c.number from client c where c.id = b.clientid) as number,
-    (select c.address from client c where c.id = b.clientid) as address,
-    (select v.name from agent v where v.id = b.agentid) as agentname,
- (select p.image from product p where p.id = b.bookingid) as bookingimage from booking b where date between '${req.query.from_date}' and '${req.query.to_date}';`
+    (select c.code from client c where c.id = b.clientid) as clientcode,
+       (select a.name from agent a where a.id = b.agentid) as agentname,
+    (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
+     from final_booking b where date between '${req.query.from_date}' and '${req.query.to_date}';`
     
     pool.query(query,(err,result)=>{
         if(err) throw err;
@@ -782,5 +775,36 @@ function importExcelData2MySQL2(filePath) {
       });
   }
   
+
+
+
+  router.get('/view-order',(req,res)=>{
+
+    pool.query(`select c.clientid , c.discountedPrice from final_booking c where c.orderid = '${req.query.orderid}'`,(err,result)=>{
+        if(err) throw err;
+        else {
+           let clientid = result[0].clientid;
+           var query1 = `select b.*,
+           (select p.icon from product p where p.id = b.bookingid) as product_image,
+           (select p.name from product p where p.id = b.bookingid) as product_name,
+           (select f.discountedPrice from final_booking f where f.orderid = b.orderid) as payable_amount,
+           (select f.price from final_booking f where f.orderid = b.orderid) as net_amount,
+           (select f.couponcode from final_booking f where f.orderid = b.orderid) as couponcode_applied
+
+
+            from booking b where b.orderid = '${req.query.orderid}';`
+           var query2 = `select * from client where id = '${clientid}';`
+           pool.query(query1+query2,(err,result)=>{
+            if(err) throw err;
+            else {
+                res.render('Admin/invoice',{result})
+                // res.json(result)
+            }
+           })
+        }
+    })
+   })
+
+
   
 module.exports = router;

@@ -456,11 +456,11 @@
 <thead>
 <tr>
     <th>Product Name</th>
-                                                <th>Customer Name</th>
+                                                <th>OrderID</th>
                                                 <th>Number</th>
                                                 <th>Address</th>
                                                 <th>Amount</th>
-                                                <th>Quantity</th>
+                                                <th>Items</th>
                                                 <th>Agent</th>
                                                 <th>Last Update</th>
 
@@ -471,12 +471,12 @@
 $.each(data,(i,item)=>{
 table+=`<tr>
 
-<td>${item.bookingname}</td>
+<td>${item.orderid}</td>
 <td>${item.name}</td>
 <td>${item.number}</td>
 <td>${item.address}</td>
-<td>${item.price}</td>
-<td>${item.quantity}</td>
+<td>${item.discountedPrice}</td>
+<td>${item.items}</td>
 <td>${item.agentname}</td>
 <td>${item.updated_date}</td>
 </tr>`

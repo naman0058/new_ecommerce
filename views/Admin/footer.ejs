@@ -90,3 +90,39 @@
     <script src="/admin/main/./js/plugins-init/pickadate-init.js"></script>
 
 
+    <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+    $('#result').on('click', '#exportBtn1', function() {
+    
+          
+              TableToExcel.convert(document.getElementById("report-table"), {
+                  name: "Report.xlsx",
+                  sheet: {
+                  name: "Sheet1"
+                  }
+                });
+              });
+        });
+
+
+
+
+        //  $('#result').on('click', '#exportBtn1', function() {
+$('#exportBtn').click(function(){
+
+          
+    
+          
+              TableToExcel.convert(document.getElementById("example"), {
+                  name: "Report.xlsx",
+                  sheet: {
+                  name: "Sheet1"
+                  }
+                });
+            });
+        
+
+      </script>
