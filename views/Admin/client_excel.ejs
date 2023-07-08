@@ -1,78 +1,147 @@
 <%- include ('./storeListingHeader.ejs') %>
 
 
+
+
+
         <!--**********************************
             Content body start
         ***********************************-->
         <div class="content-body">
 
-            <div class="row page-titles mx-0">
-               
-              
-            </div>
+            
             <!-- row -->
 
             <div class="container-fluid">
-                
               
-                <div class="row">
+                <div class="row" id='insertdiv'>
                     <div class="col-12">
-                        <h3 class="content-heading"><%=title%></h3>
+                        <h3 class="content-heading mt-3">Client Excel </h3>
+
                     </div>
-                    <div class="col-12">
+                   
+                    <div class="col-xl-12 col-xxl-12">
                         <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="example" class="display" style="min-width: 845px">
-                                        <thead>
-                                            <tr>
-                                                <th>Product Name</th>
-                                                <th>Product Code</th>
-                                                <th>Category Code</th>
-                                                <th>Style Code</th>
-                                                <th>Quantity</th>
-                                             
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-<% for(i=0;i<result.length;i++) { %>
-
-                                            <tr>
-                                                <td><%=result[i].name%></td>
-
-                                                <td><%=result[i].product_code%></td>
-                                                <td><%=result[i].categoryid%></td>
-                                                <td><%=result[i].style_code%></td>
-                                                <td><%=result[i].quantity%></td>
+                            <div class="card-body">    
+                                    <div class="basic-form">
+                                        <form action="/admin/dashboard/client/excel/insert" method="POST" enctype="multipart/form-data" class="uploadImage">
+                                               <div class="form-row">
+                                              
+                                                <div class="col-12">
+                                                    <label>Excel</label>
+                                                    <input type="file" class="form-control" name="image" placeholder="State">
+                                                </div>
 
                                               
-                                                <!-- <td><a href="#"><button type="button" class="btn btn-link">Track Order</button></a></td> -->
-                                            </tr>
+                                            </div>
+                               <button class="btn btn-primary" type="submit" style="margin-top:20px;float:right">Save</button>
 
-                                            <% } %>
-                                            
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-
-                                                <th>Product Name</th>
-                                                <th>Product Code</th>
-                                                <th>Category Code</th>
-                                                <th>Style Code</th>
-                                                <th>Quantity</th>
-                                             
-                                            </tr>
-                                        </tfoot>
+                                        </form>
+                                    </div>
                                     
-                                    </table>
+                                  
+                                    
+                                   
+                                    
+                             
+                                    
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                   
+                    
+                    <div class="col-xl-12 col-xxl-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- <h4 class="card-title">Table Bordered</h4> -->
+                                <div class="table-responsive">
+                                   <div id="result"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                   
                 </div>
+                <div class="row" id='editdiv'>
+                    <div class="col-12">
+    <h6 class="card-header"><span><button type="button" class="btn btn-primary show" id="back1" style="margin:10px">Back</button></span>Edit Data</h6>
+
+                        <h3 class="content-heading mt-3">New Category    <span style="float: right;cursor: pointer;color:#1f5ab0;" id="show">Show All</span></h3>
+
+                    </div>
+                   
+                    <div class="col-xl-12 col-xxl-12">
+                        <div class="card">
+                            <div class="card-body">    
+                                    <div class="basic-form">
+                                               <div class="form-row">
+                                                <div class="col-6">
+                                                    <label>Category ID</label>
+                                                    <input type="text" class="form-control" id="pid" readonly>
+                                                </div>
+                                             
+                                                <div class="col-6">
+                                                    <label>Category Name</label>
+                                                    <input type="text" class="form-control" id="pname" placeholder="Category Name">
+                                                </div>
+                                               
+                                              
+                                            </div>
+                               <button class="btn btn-primary" type="button" id="update" style="margin-top:20px;float:right">Update</button>
+
+                                    </div>
+                                    
+                                  
+                                    
+                                   
+                                    
+                             
+                                    
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="card mb-4" id="updateimagediv">
+                    <h6 class="card-header"><span><button type="button" class="btn btn-primary show" id="back2" style="margin:10px">Back</button></span> Upload Image</h6>
+                    <div class="card-body">
+                    
+                        <form action="/admin/dashboard/store-listing/category/update-image" method="POST" enctype="multipart/form-data">
+                            <div class="form-row">
+                       
+                                <div class="form-group col-md-6 col-lg-6">
+                                    <label class="form-label">ID</label>
+                                    <input type="text" class="form-control" placeholder="Email" id="peid" name="id" readonly>
+                                    <div class="clearfix"></div>
+                                    </div>
+                    
+                    
+                            <div class="form-group col-md-6 col-lg-6">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" name='image' placeholder="Password">
+                            <div class="clearfix"></div>
+                            </div>
+                          
+
+
+
+                          
+                                </div>
+                            
+                            
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                    </div>
+                    </div>
+                    
+
+
             </div>
         </div>
         <!--**********************************
@@ -301,31 +370,41 @@
         Main wrapper end
     ***********************************-->
 
-    <!--**********************************
-        Scripts
-    ***********************************-->
-    <script src="/Admin/./assets/plugins/common/common.min.js"></script>
-    <script src="/Admin/main/./js/custom.min.js"></script>
-    <script src="/Admin/main/./js/settings.js"></script>
-    <script src="/Admin/main/./js/quixnav.js"></script>
-    <script src="/Admin/main/./js/styleSwitcher.js"></script>
-
-    <!-- JS Grid -->
-    <script src="/Admin/./assets/plugins/jquery-validation/jquery.validate.min.js"></script>
-    <script src="/Admin/./assets/plugins/jsgrid/js/jsgrid.min.js"></script>
-    <!-- Footable -->
-    <script src="/Admin/./assets/plugins/footable/js/footable.min.js"></script>
-    <!-- Bootgrid -->
-    <script src="/Admin/./assets/plugins/jquery-bootgrid/dist/jquery.bootgrid.min.js"></script>
-    <!-- Datatable -->
-    <script src="/Admin/./assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
+   
+    <%- include ('./footer.ejs') %>
 
 
-    <!-- JS Grid Init -->
-    <script src="/Admin/main/./js/plugins-init/jsgrid-init.js"></script>
-    <script src="/Admin/main/./js/plugins-init/footable-init.js"></script>
-    <script src="/Admin/main/./js/plugins-init/jquery.bootgrid-init.js"></script>
-    <script src="/Admin/main/./js/plugins-init/datatables.init.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script>
+    
+      $('.uploadImage').submit(function (e) {
+        e.preventDefault();
+    
+        // var title = $('#title').val(); 
+    
+        $(this).ajaxSubmit({
+          // data: {title: title},
+          contentType: 'application/json',
+          success: function (response) {
+            alert('successfully')
+
+          }
+        });
+        return false;
+      });
+    
+    
+    
+    </script>
+
+
+
+
+<script src="/javascripts/category.js"></script>
+
+
+
 
 
 

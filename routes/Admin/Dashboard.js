@@ -356,6 +356,51 @@ router.get('/low-stock',(req,res)=>{
 
 
 
+
+   router.get('/product-list',(req,res)=>{
+   
+    pool.query(`select * from style`,(err,result)=>{
+        err ? console.log(err) : res.render('Admin/product-list',{result, title:'Product List',msg:'running'})
+    })
+ 
+   
+})
+
+
+
+router.get('/client/list',(req,res)=>{
+   
+    pool.query(`select * from client`,(err,result)=>{
+        err ? console.log(err) : res.render('Admin/client-list',{result, title:'Client List',msg:'running'})
+    })
+ 
+   
+})
+
+
+
+router.get('/view-product',(req,res)=>{
+   
+    pool.query(`select p.* from product p where style_code = '${req.query.code}' order by p.quantity asc`,(err,result)=>{
+        err ? console.log(err) : res.render('Admin/low-stock',{result, title:'Product List',msg:'running'})
+    })
+ 
+   
+})
+
+
+
+router.get('/view-client',(req,res)=>{
+   
+    pool.query(`select p.* from client_prices p where client_code = '${req.query.code}' order by id desc`,(err,result)=>{
+        err ? console.log(err) : res.render('Admin/price-list',{result, title:'Client Price List',msg:'running'})
+    })
+ 
+   
+})
+
+
+
    router.get('/reports',(req,res)=>{
     var query = `select b.* , 
     (select p.name from product p where p.id = b.bookingid) as bookingname,
@@ -453,6 +498,29 @@ function importExcelData2MySQL(filePath){
     // File path.
     console.log(filePath)
     readXlsxFile(filePath).then((rows) => {
+
+
+        for (let i = 1; i < rows.length; i++) {
+            const product_code = rows[i][0];
+            const style_code = rows[i][1];
+            const name = rows[i][2];
+            const categoryid = rows[i][3];
+            const small_description = rows[i][4];
+            const quantity = rows[i][5];
+            const price = rows[i][6];
+
+
+            pool.query(`INSERT INTO product (product_code, style_code, name, categoryid, small_description, quantity , price) VALUES ('${product_code}' , '${style_code}' , '${name}' , '${categoryid}' ,  '${small_description}' , '${quantity}' , '${price}')`, (err, result) => {
+                if (err) {
+                  console.error(err);
+                } else {
+                  console.log(result);
+                }
+              });
+
+
+        }
+
     // `rows` is an array of rows
     // each row being an array of cells.     
     console.log('saahahs',rows);
@@ -467,4 +535,252 @@ let query = 'INSERT INTO product (product_code, style_code, name, categoryid, sm
 
 }
 
+
+
+
+
+
+router.post('/client/excel/insert',upload.fields([{ name: 'image', maxCount: 1 }, { name: 'icon', maxCount: 8 } ,  { name: 'image1', maxCount: 8 }  ]),(req,res)=>{
+    let body = req.body
+ console.log('s')
+    console.log(req.body)
+
+    var today = new Date();
+    var dd = today.getDate();
+    
+    var mm = today.getMonth()+1; 
+    var yyyy = today.getFullYear();
+    if(dd<10) 
+    {
+        dd='0'+dd;
+    } 
+    
+    if(mm<10) 
+    {
+        mm='0'+mm;
+    } 
+    today = yyyy+'-'+mm+'-'+dd;
+
+    body['created_date'] = today
+
+
+    if(req.files.image1){
+        body['image'] = req.files.image[0].filename;
+        body['icon'] = req.files.icon[0].filename;
+        body['image1'] = req.files.image1[0].filename;
+
+     console.log(req.body)
+       pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+           err ? console.log(err) : res.json({msg : 'success'})
+       })
+    }
+
+else if(req.files.icon){
+
+    
+
+    body['image'] = req.files.image[0].filename;
+    body['icon'] = req.files.icon[0].filename;
+
+    console.log(req.files.image[0].filename)
+   
+
+ console.log(req.body)
+   pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+       err ? console.log(err) : res.json({msg : 'success'})
+   })
+}
+else {
+    body['image'] = req.files.image[0].filename;
+
+     importExcelData2MySQL1('public/images/' + req.files.image[0].filename);
+
+  
+     res.redirect('/admin/dashboard/store-listing/client_excel')
+
+//  console.log(req.body)
+//    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+//        err ? console.log(err) : res.json({msg : 'success'})
+//    })
+}
+
+
+    
+   
+})
+
+
+
+
+function importExcelData2MySQL1(filePath) {
+    let query = 'INSERT INTO client_prices (client_code, style_code, price) VALUES ?';
+  
+    readXlsxFile(filePath)
+      .then((rows) => {
+        console.log('rows', rows.length);
+  
+        for (let i = 1; i < rows.length; i++) {
+          const clientCode = rows[i][0];
+          const styleCode = rows[i][1];
+          const price = rows[i][2];
+  
+          pool.query(
+            `SELECT * FROM client_prices WHERE client_code = '${clientCode}' AND style_code = '${styleCode}'`,
+            (err, result) => {
+              if (err) {
+                console.error(err);
+              } else {
+                if (result.length > 0) {
+                  pool.query(
+                    `UPDATE client_prices SET price = '${price}' WHERE client_code = '${clientCode}' AND style_code = '${styleCode}'`,
+                    (err, result) => {
+                      if (err) {
+                        console.error(err);
+                      } else {
+                        console.log(result);
+                      }
+                    }
+                  );
+                } else {
+                  pool.query(`INSERT INTO client_prices (client_code, style_code, price) VALUES ('${clientCode}' , '${styleCode}' , '${price}')`, (err, result) => {
+                    if (err) {
+                      console.error(err);
+                    } else {
+                      console.log(result);
+                    }
+                  });
+                }
+              }
+            }
+          );
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+
+
+
+
+
+
+
+
+  router.post('/inventory/insert',upload.fields([{ name: 'image', maxCount: 1 }, { name: 'icon', maxCount: 8 } ,  { name: 'image1', maxCount: 8 }  ]),(req,res)=>{
+    let body = req.body
+ console.log('s')
+    console.log(req.body)
+
+    var today = new Date();
+    var dd = today.getDate();
+    
+    var mm = today.getMonth()+1; 
+    var yyyy = today.getFullYear();
+    if(dd<10) 
+    {
+        dd='0'+dd;
+    } 
+    
+    if(mm<10) 
+    {
+        mm='0'+mm;
+    } 
+    today = yyyy+'-'+mm+'-'+dd;
+
+    body['created_date'] = today
+
+
+    if(req.files.image1){
+        body['image'] = req.files.image[0].filename;
+        body['icon'] = req.files.icon[0].filename;
+        body['image1'] = req.files.image1[0].filename;
+
+     console.log(req.body)
+       pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+           err ? console.log(err) : res.json({msg : 'success'})
+       })
+    }
+
+else if(req.files.icon){
+
+    
+
+    body['image'] = req.files.image[0].filename;
+    body['icon'] = req.files.icon[0].filename;
+
+    console.log(req.files.image[0].filename)
+   
+
+ console.log(req.body)
+   pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+       err ? console.log(err) : res.json({msg : 'success'})
+   })
+}
+else {
+    body['image'] = req.files.image[0].filename;
+
+     importExcelData2MySQL2('public/images/' + req.files.image[0].filename);
+
+  
+     res.redirect('/admin/dashboard/store-listing/client_excel')
+
+//  console.log(req.body)
+//    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+//        err ? console.log(err) : res.json({msg : 'success'})
+//    })
+}
+
+
+    
+   
+})
+
+
+
+
+function importExcelData2MySQL2(filePath) {
+    readXlsxFile(filePath)
+      .then((rows) => {
+        console.log('rows', rows.length);
+  
+        for (let i = 1; i < rows.length; i++) {
+          const productCode = rows[i][0];
+          const quantity = rows[i][1];
+          const action = rows[i][2];
+  
+          if (action == 'add' || action == 'replace') {
+            pool.query(
+              `UPDATE product SET quantity = quantity + ${quantity} WHERE product_code = '${productCode}'`,
+              (err, result) => {
+                if (err) {
+                  console.error(err);
+                } else {
+                  console.log(result);
+                }
+              }
+            );
+          } else if (action === 'reduce') {
+            pool.query(
+              `UPDATE product SET quantity = quantity - ${quantity} WHERE product_code = '${productCode}'`,
+              (err, result) => {
+                if (err) {
+                  console.error(err);
+                } else {
+                  console.log(result);
+                }
+              }
+            );
+          } else {
+            console.log(`Invalid action: ${action}`);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  
+  
 module.exports = router;

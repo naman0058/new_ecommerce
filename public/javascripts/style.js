@@ -1,7 +1,6 @@
 let categories = []
-let agent = []
-let table = '/admin/dashboard/store-listing/client'
 
+let table = '/admin/dashboard/store-listing/style'
 
 
 $('.abc').hide()
@@ -9,34 +8,12 @@ $('.abc').hide()
 
 $('#show').click(function(){
 
-$.getJSON('/api/get-client',data=>{
+$.getJSON('/api/get-style',data=>{
     categories = data
     makeTable(data)
 })
 
 })
-
-
-$.getJSON(`/api/get-agent`, data => {
-    agent = data
-    fillDropDown('agentid', data, 'Choose Agent Code', 0)
-  
-})
-
-
-
-function fillDropDown(id, data, label, selectedid = 0) {
-    $(`#${id}`).empty()
-    $(`#${id}`).append($('<option>').val("null").text(label))
-
-    $.each(data, (i, item) => {
-        if (item.id == selectedid) {
-            $(`#${id}`).append($('<option selected>').val(item.id).text(item.name))
-        } else {
-            $(`#${id}`).append($('<option>').val(item.id).text(item.name))
-        }
-    })
-}
 
 
 
@@ -48,10 +25,8 @@ function makeTable(categories){
 <table id="report-table" class="table  table-striped mb-0">
 <thead>
 <tr>
-<th>Agent Code</th>
-<th>Name</th>
-<th>Number</th>
 <th>Code</th>
+<th>Name</th>
 <th>Options</th>
 </tr>
 </thead>
@@ -60,14 +35,12 @@ function makeTable(categories){
 $.each(categories,(i,item)=>{
 table+=`<tr>
 
-<td>${item.agentname}</td>
-<td>${item.name}</td>
-<td>${item.number}</td>
+
 <td>${item.code}</td>
-
-
+<td>${item.name}</td>
 <td>
 <a href="#!" class="btn btn-info btn-sm edits" id="${item.id}"><i class="feather icon-edit"></i>&nbsp;Edit </a>
+
 <a href="#!" class="btn btn-danger btn-sm deleted" id="${item.id}"><i class="feather icon-trash-2"></i>&nbsp;Delete </a>
 </td>
 </tr>`
@@ -83,9 +56,8 @@ table+=`</tbody>
     $('#result').show()
 }
 
+
 {/* <a href="#!" class="btn btn-info btn-sm updateimage"  id="${item.id}"><i class="feather icon-edit"></i>&nbsp;Edit Image </a> */}
-
-
 
 $('#result').on('click', '.deleted', function() {
      const id = $(this).attr('id')
@@ -100,22 +72,14 @@ $('#result').on('click', '.deleted', function() {
 $('#result').on('click', '.edits', function() {
     const id = $(this).attr('id')
     const result = categories.find(item => item.id == id);
-    console.log(agent)
-    fillDropDown('pagentid', agent, 'Choose Agent Name', result.agentid)
-    $('#pagentid').append($('<option>').val(result.agentid).text(result.agentname))
-
-
   
     $('#editdiv').show()
     $('#result').hide()
     $('#insertdiv').hide() 
     $('#pid').val(result.id)
      $('#pname').val(result.name)
-     $('#pnumber').val(result.number)
      $('#pcode').val(result.code)
-     $('#pagentid').val(result.agentid)
-
-    
+     
    
  })
 
@@ -134,12 +98,7 @@ $('#update').click(function(){  //data insert in database
     let updateobj = {
         id: $('#pid').val(),
         name: $('#pname').val(),
-        code: $('#pcode').val(),
-        number: $('#pnumber').val(),
-        agentid: $('#pagentid').val(),
-
-      
-      
+        code:$('#pcode').val()
        
         }
 
@@ -155,7 +114,7 @@ $('#update').click(function(){  //data insert in database
 
 function refresh() 
 {
-    $.getJSON('/api/get-client',data=>{
+    $.getJSON('/api/get-style',data=>{
         makeTable(data)
     })
 }

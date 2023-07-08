@@ -3,11 +3,11 @@ let subcategories = []
 let services = []
 
 
-let table = '/admin/dashboard/store-listing/product'
+let table = '/admin/dashboard/store-listing/images'
 
 $('#show').click(function(){
   
-$.getJSON(`/api/get-product`, data => {
+$.getJSON(`/api/get-images`, data => {
     console.log(data)
     services = data
     makeTable(data)
@@ -21,9 +21,9 @@ $.getJSON(`/api/get-product`, data => {
 
 
 
-$.getJSON(`/api/get-category`, data => {
+$.getJSON(`/api/get-style`, data => {
     categories = data
-    fillDropDown('categoryid', data, 'Choose Category', 0)
+    fillDropDown('categoryid', data, 'Choose Style Code', 0)
   
 })
 
@@ -52,14 +52,8 @@ function makeTable(categories){
 <thead>
 <tr>
 <th>Image</th>
-<th>Product Code</th>
 <th>Style Code</th>
 
-<th>Category</th>
-<th>Name</th>
-<th>Price</th>
-<th>Stock</th>
-<th>Keywords</th>
 
 
 <th>Options</th>
@@ -75,21 +69,15 @@ table+=`<tr>
 </td>
 
 
-<td>${item.product_code}</td>
-<td>${item.style_code}</td>
-    
 <td>${item.categoryname}</td>
-<td>${item.name}</td>
-<td>${item.quantity}</td>
-<td>${item.price}</td>
-<td>${item.keyword}</td>
+    
+
 
 
 
 
 
 <td>
-<a href="#!" class="btn btn-info btn-sm edits" id="${item.id}"><i class="feather icon-edit"></i>&nbsp;Edit </a>
 <a href="#!" class="btn btn-info btn-sm updateimage"  id="${item.id}"><i class="feather icon-edit"></i>&nbsp;Edit Image </a>
 <a href="#!" class="btn btn-danger btn-sm deleted" id="${item.id}"><i class="feather icon-trash-2"></i>&nbsp;Delete </a>
 </td>
@@ -119,8 +107,8 @@ $('#result').on('click', '.deleted', function() {
 
 $('#result').on('click', '.edits', function() {
     const id = $(this).attr('id')
-    const result = services.find(item => item.id == id);
-    fillDropDown('pcategoryid', categories, 'Choose Category', result.categoryid)
+    const result = categories.find(item => item.id == id);
+    fillDropDown('pcategoryid', categories, 'Choose Style Code', result.categoryid)
 
     // $('#pcategoryid').append($('<option>').val(result.categoryid).text(result.categoryname))
 
@@ -190,7 +178,7 @@ $('#update').click(function(){  //data insert in database
 
 function refresh() 
 {
-    $.getJSON(`/api/get-product`, data => {
+    $.getJSON(`/api/get-images`, data => {
         console.log(data)
         services = data
         makeTable(data)

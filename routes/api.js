@@ -14,6 +14,25 @@ router.get('/get-category',(req,res)=>{
 
 
 
+   router.get('/get-style',(req,res)=>{
+    pool.query(`select * from style order by name`,(err,result)=>{
+        if(err) throw err;
+        else res.json(result)
+    })
+   
+   })
+
+
+   router.get('/get-images',(req,res)=>{
+    pool.query(`select i.* , (select c.code from style c where c.id = i.categoryid) as categoryname from images i order by id`,(err,result)=>{
+        if(err) throw err;
+        else res.json(result)
+    })
+   
+   })
+
+
+
    router.get('/get-agent',(req,res)=>{
     pool.query(`select * from agent order by name`,(err,result)=>{
         if(err) throw err;
@@ -25,7 +44,9 @@ router.get('/get-category',(req,res)=>{
 
 
    router.get('/get-client',(req,res)=>{
-    pool.query(`select * from client order by name`,(err,result)=>{
+    pool.query(`select c.*  , 
+    (select a.name from agent a where a.id = c.agentid) as agentname
+     from client c order by name`,(err,result)=>{
         if(err) throw err;
         else res.json(result)
     })

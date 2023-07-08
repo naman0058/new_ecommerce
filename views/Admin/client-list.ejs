@@ -26,11 +26,9 @@
                                     <table id="example" class="display" style="min-width: 845px">
                                         <thead>
                                             <tr>
-                                                <th>Product Name</th>
-                                                <th>Product Code</th>
-                                                <th>Category Code</th>
-                                                <th>Style Code</th>
-                                                <th>Quantity</th>
+                                                <th>Client Name</th>
+                                                <th>Client Code</th>
+                                                <th>Action</th>
                                              
 
                                             </tr>
@@ -42,13 +40,9 @@
                                             <tr>
                                                 <td><%=result[i].name%></td>
 
-                                                <td><%=result[i].product_code%></td>
-                                                <td><%=result[i].categoryid%></td>
-                                                <td><%=result[i].style_code%></td>
-                                                <td><%=result[i].quantity%></td>
-
+                                                <td><%=result[i].code%></td>
                                               
-                                                <!-- <td><a href="#"><button type="button" class="btn btn-link">Track Order</button></a></td> -->
+                                                <td><a href="/admin/dashboard/view-client?code=<%=result[i].code%>"><button type="button" class="btn btn-link">View Price List</button></a></td>
                                             </tr>
 
                                             <% } %>
@@ -56,12 +50,10 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-
-                                                <th>Product Name</th>
-                                                <th>Product Code</th>
-                                                <th>Category Code</th>
+                                                <th>Style Name</th>
                                                 <th>Style Code</th>
-                                                <th>Quantity</th>
+                                                <th>Action</th>
+                                             
                                              
                                             </tr>
                                         </tfoot>

@@ -3,6 +3,7 @@ let categories = []
 let table = '/admin/dashboard/store-listing/agent'
 
 
+$('.abc').hide()
 
 
 
@@ -25,9 +26,7 @@ function makeTable(categories){
 <table id="report-table" class="table  table-striped mb-0">
 <thead>
 <tr>
-<th>Image</th>
 <th>Name</th>
-<th>Email</th>
 <th>Number</th>
 <th>Role</th>
 <th>Status</th>
@@ -40,19 +39,14 @@ function makeTable(categories){
 
 $.each(categories,(i,item)=>{
 table+=`<tr>
-<td>
-<img src="/images/${item.image}" class="img-fluid img-radius wid-40" alt="" style="width:30px;height:30px">
-</td>
 
 <td>${item.name}</td>
-<td>${item.email}</td>
 <td>${item.number}</td>
 <td>${item.role}</td>
 <td>${item.status}</td>
 
 <td>
 <a href="#!" class="btn btn-info btn-sm edits" id="${item.id}"><i class="feather icon-edit"></i>&nbsp;Edit </a>
-<a href="#!" class="btn btn-info btn-sm updateimage"  id="${item.id}"><i class="feather icon-edit"></i>&nbsp;Edit Image </a>
 <a href="#!" class="btn btn-danger btn-sm deleted" id="${item.id}"><i class="feather icon-trash-2"></i>&nbsp;Delete </a>
 </td>
 </tr>`
@@ -70,6 +64,7 @@ table+=`</tbody>
 
 
 
+{/* <a href="#!" class="btn btn-info btn-sm updateimage"  id="${item.id}"><i class="feather icon-edit"></i>&nbsp;Edit Image </a> */}
 
 $('#result').on('click', '.deleted', function() {
      const id = $(this).attr('id')
@@ -91,7 +86,6 @@ $('#result').on('click', '.edits', function() {
     $('#pid').val(result.id)
      $('#pname').val(result.name)
      $('#pnumber').val(result.number)
-     $('#pemail').val(result.email)
      $('#paddress').val(result.address)
      $('#pstatus').val(result.status)
      $('#ppassword').val(result.password)
@@ -115,7 +109,6 @@ $('#update').click(function(){  //data insert in database
     let updateobj = {
         id: $('#pid').val(),
         name: $('#pname').val(),
-        email: $('#pemail').val(),
         number: $('#pnumber').val(),
         address: $('#paddress').val(),
         status: $('#pstatus').val(),
