@@ -10,8 +10,8 @@ var cors = require('cors')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var admin = require('./routes/Admin/Login');
-var adminDashboard = require('./routes/Admin/Dashboard')
+var admin = require('./routes/admin/Login');
+var adminDashboard = require('./routes/admin/Dashboard')
 var api = require('./routes/api')
 
 
