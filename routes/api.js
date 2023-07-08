@@ -84,7 +84,8 @@ router.get('/get-category',(req,res)=>{
 
 
    router.post('/client-list',(req,res)=>{
-    pool.query(`select * from client order by name`,(err,result)=>{
+    console.log(req.body.agentid)
+    pool.query(`select * from client where agentid= '${req.body.agentid}' order by name`,(err,result)=>{
         if(err) throw err;
         else res.json(result)
     })
@@ -92,13 +93,53 @@ router.get('/get-category',(req,res)=>{
    })
 
 
-   router.post('/product-list',(req,res)=>{
-    pool.query(`select p.* from product p where p.categoryid = '${req.body.categoryid}' order by name`,(err,result)=>{
-        if(err) throw err;
-        else res.json(result)
-    })
+//    router.post('/product-list',(req,res)=>{
+//     console.log(req.body.categoryid)
+//     pool.query(`select style_code, price from client_prices`,(err,result)=>{
+//         if(err) throw err;
+//         else{
+//             let style_code = result
+//             pool.query(`select p.* from product p where p.categoryid = '${req.body.categoryid}' and style_code IN  '${style_code}'  order by name`,(err,result)=>{
+//                 if(err) throw err;
+//                 else res.json(result)
+//             })
+//         }
+//     })
+  
    
-   })
+//    })
+
+
+
+router.post('/product-list', (req, res) => {
+    console.log(req.body);
+    pool.query(`SELECT style_code, price FROM client_prices WHERE client_code = '${req.body.clientid}'`, (err, result) => {
+      if (err) {
+        throw err;
+      } else if (result[0]) {
+        const styleCodes = result.map((row) => row.style_code); // Extract style codes from the result
+        console.log('done', styleCodes);
+  
+        pool.query(
+          `SELECT p.*, cp.price, i.image , i.image1 , i.icon FROM product p INNER JOIN client_prices cp ON p.style_code = cp.style_code LEFT JOIN images i ON p.style_code = i.categoryid WHERE p.categoryid = '${req.body.categoryid}' AND p.style_code IN (${styleCodes
+            .map((code) => `'${code}'`)
+            .join(', ')}) ORDER BY p.name`,
+          (err, result) => {
+            if (err) {
+              throw err;
+            } else {
+                console.log(result)
+              res.json(result);
+            }
+          }
+        );
+      } else {
+        res.json(result);
+      }
+    });
+  });
+  
+  
 
 
    router.post('/add-to-cart',(req,res)=>{
@@ -194,7 +235,8 @@ router.get('/get-category',(req,res)=>{
 
 
    router.post('/mycart',(req,res)=>{
-    pool.query(`select c.*,(select p.icon from product p where p.id = c.bookingid) as product_image,
+    pool.query(`select c.*,
+    (select i.image from images i where i.categoryid = (select p.style_code from product p where p.id = c.bookingid)) as product_image,
     (select p.name from product p where p.id = c.bookingid) as product_name
         from cart c where c.agentid = '${req.body.agentid}'`,(err,result)=>{
         if(err) throw err;
@@ -207,15 +249,17 @@ router.get('/get-category',(req,res)=>{
 
 
    router.post('/checkout',(req,res)=>{
-
+console.log(req.body)
     pool.query(`select c.clientid from cart c where c.agentid = '${req.body.agentid}'`,(err,result)=>{
         if(err) throw err;
         else {
            let clientid = result[0].clientid;
-           var query1 = `select c.*,(select p.icon from product p where p.id = c.bookingid) as product_image,
+           var query1 = `select c.*,
+           
+           (select i.image from images i where i.categoryid = (select p.style_code from product p where p.id = c.bookingid)) as product_image,
            (select p.name from product p where p.id = c.bookingid) as product_name
             from cart c where c.agentid = '${req.body.agentid}';`
-           var query2 = `select * from client where id = '${clientid}';`
+           var query2 = `select * from client where code = '${clientid}';`
            pool.query(query1+query2,(err,result)=>{
             if(err) throw err;
             else {
@@ -373,7 +417,7 @@ router.get('/get-category',(req,res)=>{
     (SELECT COUNT(id) FROM booking bo WHERE bo.orderid = b.orderid) AS total_item,
     (SELECT sum(quantity) FROM booking bo WHERE bo.orderid = b.orderid) AS total_piece
   FROM final_booking b
-  WHERE status = '${req.body.status}' AND agentid = '${req.body.agentid}';`,(err,result)=>{
+  WHERE status = '${req.body.status}' AND agentid = '${req.body.agentid}' order by id desc`,(err,result)=>{
         if(err) throw err;
         else {
             res.json(result)
@@ -390,14 +434,14 @@ router.get('/get-category',(req,res)=>{
         else {
            let clientid = result[0].clientid;
            var query1 = `select b.*,
-           (select p.icon from product p where p.id = b.bookingid) as product_image,
+           (select i.image from images i where i.categoryid = (select p.style_code from product p where p.id = b.bookingid)) as product_image,
            (select p.name from product p where p.id = b.bookingid) as product_name,
            (select f.discountedPrice from final_booking f where f.orderid = b.orderid) as payable_amount,
            (select f.couponcode from final_booking f where f.orderid = b.orderid) as couponcode_applied
 
 
             from booking b where b.orderid = '${req.body.orderid}';`
-           var query2 = `select * from client where id = '${clientid}';`
+           var query2 = `select * from client where code = '${clientid}';`
            pool.query(query1+query2,(err,result)=>{
             if(err) throw err;
             else {
