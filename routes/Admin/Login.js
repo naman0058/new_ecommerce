@@ -21,7 +21,7 @@ pool.query(`select * from ${table} where email = '${req.body.email}' and passwor
   if(err) throw err;
   else if(result[0]) {
       req.session.adminid = result[0].id
-   res.redirect('/admin/dashboard')
+   res.redirect('/Admin/dashboard')
   }
   else {
     res.render('Admin/login',{msg : '* Invalid Credentials'})
@@ -33,7 +33,7 @@ pool.query(`select * from ${table} where email = '${req.body.email}' and passwor
 
    router.get('/logout',(req,res)=>{
      req.session.adminid = null;
-     res.redirect('/admin')
+     res.redirect('/Admin')
    })
 
 

@@ -249,7 +249,7 @@ router.post('/store-listing/:name/update-image',upload.fields([{ name: 'image', 
             //     description:'successfully update'
             // })
 
-            res.redirect(`/admin/dashboard/store-listing/${req.params.name}`)
+            res.redirect(`/Admin/dashboard/store-listing/${req.params.name}`)
         }
     })
 
@@ -325,7 +325,7 @@ router.get('/orders/:type',(req,res)=>{
           pool.query(`update final_booking set status = 'completed' , updated_date = '${today}' where orderid = '${req.query.orderid}'`,(err,result)=>{
             if(err) throw err;
             else{
-         res.redirect('/admin/dashboard/orders/runnning')
+         res.redirect('/Admin/dashboard/orders/runnning')
 
             }
           })
@@ -469,7 +469,7 @@ else {
      importExcelData2MySQL('public/images/' + req.files.image[0].filename);
 
   
-     res.redirect('/admin/dashboard/store-listing/excel')
+     res.redirect('/Admin/dashboard/store-listing/excel')
 
 //  console.log(req.body)
 //    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
@@ -589,7 +589,7 @@ else {
      importExcelData2MySQL1('public/images/' + req.files.image[0].filename);
 
   
-     res.redirect('/admin/dashboard/store-listing/client_excel')
+     res.redirect('/Admin/dashboard/store-listing/client_excel')
 
 //  console.log(req.body)
 //    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
@@ -717,7 +717,7 @@ else {
      importExcelData2MySQL2('public/images/' + req.files.image[0].filename);
 
   
-     res.redirect('/admin/dashboard/store-listing/client_excel')
+     res.redirect('/Admin/dashboard/store-listing/client_excel')
 
 //  console.log(req.body)
 //    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
