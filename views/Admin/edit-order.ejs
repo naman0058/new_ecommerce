@@ -1,0 +1,224 @@
+<%- include ('./storeListingHeader.ejs') %>
+
+
+
+
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+
+            
+            <!-- row -->
+
+            <div class="container-fluid">
+              
+                <div class="row" id='insertdiv'>
+                    <div class="col-12">
+                        <h3 class="content-heading mt-3">New Category    <span style="float: right;cursor: pointer;color:#1f5ab0;" id="show">Show All</span></h3>
+
+                    </div>
+                   
+                    <div class="col-xl-12 col-xxl-12">
+                        <div class="card">
+                            <div class="card-body">    
+                                    <div class="basic-form">
+                                        <form action="/admin/dashboard/update/order/quantity" method="post">
+                                               <div class="form-row">
+
+
+                                                    
+                                                <div class="col-6">
+                                                    <label>ORderID</label>
+                                                    <input type="text" class="form-control" name="orderid" placeholder="Category Name" value="<%=result[0].orderid%>" readonly>
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <label>Booking ID</label>
+                                                    <input type="text" class="form-control" name="bookingid" placeholder="Category Name" value="<%=result[0].id%>" readonly>
+                                                </div>
+
+
+                                                <div class="col-6" style="margin-top: 20px;">
+                                                    <label>Quantity</label>
+                                                    <input type="text" class="form-control" name="quantity" placeholder="Category Name" value="<%=result[0].quantity%>">
+                                                </div>
+                                                <div class="col-6" style="margin-top: 20px;">
+                                                    <label>Price</label>
+                                                    <input type="text" class="form-control" name="price" placeholder="Category Code" value="<%=result[0].price%>" readonly>
+                                                </div>
+                                              
+
+                                              
+                                            </div>
+                               <button class="btn btn-primary" type="submit" style="margin-top:20px;float:right">Update</button>
+
+                                        </form>
+                                    </div>
+                                    
+                                  
+                                    
+                                   
+                                    
+                             
+                                    
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                   
+                    
+                    <div class="col-xl-12 col-xxl-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- <h4 class="card-title">Table Bordered</h4> -->
+                                <div class="table-responsive">
+                                   <div id="result"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id='editdiv'>
+                    <div class="col-12">
+    <h6 class="card-header"><span><button type="button" class="btn btn-primary show" id="back1" style="margin:10px">Back</button></span>Edit Data</h6>
+
+                        <h3 class="content-heading mt-3">New Category    <span style="float: right;cursor: pointer;color:#1f5ab0;" id="show">Show All</span></h3>
+
+                    </div>
+                   
+                    <div class="col-xl-12 col-xxl-12">
+                        <div class="card">
+                            <div class="card-body">    
+                                    <div class="basic-form">
+                                               <div class="form-row">
+                                                <div class="col-4">
+                                                    <label>Category ID</label>
+                                                    <input type="text" class="form-control" id="pid" readonly>
+                                                </div>
+                                             
+                                                <div class="col-4">
+                                                    <label>Category Name</label>
+                                                    <input type="text" class="form-control" id="pname" placeholder="Category Name">
+                                                </div>
+                                               
+                                                <div class="col-4">
+                                                    <label>Category Code</label>
+                                                    <input type="text" class="form-control" id="pcode" placeholder="Category Code">
+                                                </div>
+                                              
+                                            </div>
+                               <button class="btn btn-primary" type="button" id="update" style="margin-top:20px;float:right">Update</button>
+
+                                    </div>
+                                    
+                                  
+                                    
+                                   
+                                    
+                             
+                                    
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="card mb-4" id="updateimagediv">
+                    <h6 class="card-header"><span><button type="button" class="btn btn-primary show" id="back2" style="margin:10px">Back</button></span> Upload Image</h6>
+                    <div class="card-body">
+                    
+                        <form action="/admin/dashboard/store-listing/category/update-image" method="POST" enctype="multipart/form-data">
+                            <div class="form-row">
+                       
+                                <div class="form-group col-md-6 col-lg-6">
+                                    <label class="form-label">ID</label>
+                                    <input type="text" class="form-control" placeholder="Email" id="peid" name="id" readonly>
+                                    <div class="clearfix"></div>
+                                    </div>
+                    
+                    
+                            <div class="form-group col-md-6 col-lg-6">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" name='image' placeholder="Password">
+                            <div class="clearfix"></div>
+                            </div>
+                          
+
+
+
+                          
+                                </div>
+                            
+                            
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                    </div>
+                    </div>
+                    
+
+
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+        
+        
+     
+
+        
+       
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+   
+    <%- include ('./footer.ejs') %>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script>
+    
+      $('.uploadImage').submit(function (e) {
+        e.preventDefault();
+    
+        // var title = $('#title').val(); 
+    
+        $(this).ajaxSubmit({
+          // data: {title: title},
+          contentType: 'application/json',
+          success: function (response) {
+            alert('successfully')
+
+          }
+        });
+        return false;
+      });
+    
+    
+    
+    </script>
+
+
+
+
+<script src="/javascripts/category.js"></script>
+
+
+
+
+
+
+</body>
+
+
+</html>

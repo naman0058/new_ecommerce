@@ -4,7 +4,206 @@ var pool =  require('../pool');
 var upload = require('../multer');
 const readXlsxFile = require('read-excel-file/node');
 const { file } = require('pdfkit');
+const ExcelJS = require('exceljs');
 
+// API endpoint for downloading category data as Excel
+router.get('/download-style', (req, res) => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Categories');
+
+  // Fetch category data from the database
+  pool.query('SELECT * FROM style', (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Failed to fetch data from the database' });
+    }
+
+    // Add column headers to the worksheet
+    worksheet.columns = [
+      { header: 'Name', key: 'name', width: 10 },
+      { header: 'Code', key: 'code', width: 20 },
+    ];
+
+    // Add data rows to the worksheet
+    results.forEach((category) => {
+      worksheet.addRow(category);
+    });
+
+    // Set the response headers for file download
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+    res.setHeader('Content-Disposition', 'attachment; filename=styles.xlsx');
+
+    // Save the workbook as a stream and send it as the API response
+    workbook.xlsx.write(res)
+      .then(() => {
+        res.end();
+      })
+      .catch((error) => {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to generate Excel file' });
+      });
+  });
+});
+
+
+
+router.get('/download-product', (req, res) => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Categories');
+
+  // Fetch category data from the database
+  pool.query('SELECT * FROM product', (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Failed to fetch data from the database' });
+    }
+
+    // Add column headers to the worksheet
+    worksheet.columns = [
+      { header: 'Product Code', key: 'product_code', width: 10 },
+      { header: 'Style Code', key: 'style_code', width: 20 },
+      { header: 'Name', key: 'name', width: 20 },
+      { header: 'Category Code', key: 'categoryid', width: 20 },
+      { header: 'Description', key: 'small_description', width: 20 },
+      { header: 'Quantity', key: 'quantity', width: 20 },
+      { header: 'PRice', key: 'price', width: 20 },
+
+    ];
+
+    // Add data rows to the worksheet
+    results.forEach((category) => {
+      worksheet.addRow(category);
+    });
+
+    // Set the response headers for file download
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+    res.setHeader('Content-Disposition', 'attachment; filename=product.xlsx');
+
+    // Save the workbook as a stream and send it as the API response
+    workbook.xlsx.write(res)
+      .then(() => {
+        res.end();
+      })
+      .catch((error) => {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to generate Excel file' });
+      });
+  });
+});
+
+
+
+router.get('/download-client-prices', (req, res) => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Categories');
+
+  // Fetch category data from the database
+  pool.query('SELECT * FROM client_prices', (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Failed to fetch data from the database' });
+    }
+
+    // Add column headers to the worksheet
+    worksheet.columns = [
+      { header: 'Client Code', key: 'client_code', width: 10 },
+      { header: 'Style Code', key: 'style_code', width: 20 },
+      { header: 'Price', key: 'price', width: 20 },
+     
+    ];
+
+    // Add data rows to the worksheet
+    results.forEach((category) => {
+      worksheet.addRow(category);
+    });
+
+    // Set the response headers for file download
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+    res.setHeader('Content-Disposition', 'attachment; filename=client_prices.xlsx');
+
+    // Save the workbook as a stream and send it as the API response
+    workbook.xlsx.write(res)
+      .then(() => {
+        res.end();
+      })
+      .catch((error) => {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to generate Excel file' });
+      });
+  });
+});
+
+
+
+router.get('/download-running-orders', (req, res) => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Categories');
+
+  // Fetch category data from the database
+  pool.query(`SELECT b.* , 
+  (select p.product_code from product p where p.id = b.bookingid) as product_code,
+  (select p.style_code from product p where p.id = b.bookingid) as style_code,
+  (select a.name from agent a where a.id = b.agentid) as agent_name
+
+   FROM booking b where status = 'running'`, (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Failed to fetch data from the database' });
+    }
+
+    // Add column headers to the worksheet
+    worksheet.columns = [
+      { header: 'OrderID', key: 'orderid', width: 10 },
+      { header: 'BookingID', key: 'bookingid', width: 10 },
+      { header: 'Product Code', key: 'product_code', width: 10 },
+      { header: 'Style Code', key: 'style_code', width: 20 },
+      { header: 'Name', key: 'name', width: 20 },
+      { header: 'Number', key: 'number', width: 20 },
+      { header: 'Address', key: 'address', width: 20 },
+      { header: 'Quantity', key: 'quantity', width: 20 },
+      { header: 'Price', key: 'price', width: 20 },
+      { header: 'Date', key: 'date', width: 20 },
+      { header: 'Agent', key: 'agent_name', width: 20 },
+      { header: 'Last Update', key: 'updated_date', width: 20 },
+
+
+
+
+     
+    ];
+
+    // Add data rows to the worksheet
+    results.forEach((category) => {
+      worksheet.addRow(category);
+    });
+
+    // Set the response headers for file download
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+    res.setHeader('Content-Disposition', 'attachment; filename=running_orders.xlsx');
+
+    // Save the workbook as a stream and send it as the API response
+    workbook.xlsx.write(res)
+      .then(() => {
+        res.end();
+      })
+      .catch((error) => {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to generate Excel file' });
+      });
+  });
+});
 
 
 
@@ -262,40 +461,114 @@ router.post('/store-listing/:name/update-image',upload.fields([{ name: 'image', 
 
 
 
-router.get('/orders/:type',(req,res)=>{
-    if(req.params.type == 'runnning'){
-       pool.query(`select b.* , 
-       (select c.code from client c where c.id = b.clientid) as clientcode,
-       (select a.name from agent a where a.id = b.agentid) as agentname,
-    (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
+// router.get('/orders/:type',(req,res)=>{
+//     if(req.params.type == 'runnning'){
+//        pool.query(`select b.* , 
+//        (select c.code from client c where c.id = b.clientid) as clientcode,
+//        (select a.name from agent a where a.id = b.agentid) as agentname,
+//     (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
 
-       from final_booking b where b.status != 'completed' and b.status != 'cancelled'  order by id desc`,(err,result)=>{
-           err ? console.log(err) : res.render('Admin/order',{result, title:'Running Orders',msg:'running'})
-       })
-    }
-    else if(req.params.type=='completed'){
-       pool.query(`select b.* , 
-       (select c.code from client c where c.id = b.clientid) as clientcode,
-       (select a.name from agent a where a.id = b.agentid) as agentname,
-    (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
+//        from final_booking b where b.status != 'completed' and b.status != 'cancelled'  order by id desc`,(err,result)=>{
+//            err ? console.log(err) : res.render('Admin/order',{result, title:'Running Orders',msg:'running'})
+//        })
+//     }
+//     else if(req.params.type=='completed'){
+//        pool.query(`select b.* , 
+//        (select c.code from client c where c.id = b.clientid) as clientcode,
+//        (select a.name from agent a where a.id = b.agentid) as agentname,
+//     (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
 
    
-       from final_booking b where b.status = 'completed'  order by id desc`,(err,result)=>{
-           err ? console.log(err) : res.render('Admin/order',{result, title:'Completed Orders',msg:'completed'})
-       })
-    }
-    else {
-       pool.query(`select b.* , 
-    (select c.code from client c where c.id = b.clientid) as clientcode,
-    (select a.name from agent a where a.id = b.agentid) as agentname,
-    (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
-    from final_booking b where b.status = 'cancelled'  order by id desc`,(err,result)=>{
-           err ? console.log(err) : res.render('Admin/order',{result, title:'Cancelled Orders',msg:'cancel'})
-       })
-    }
+//        from final_booking b where b.status = 'completed'  order by id desc`,(err,result)=>{
+//            err ? console.log(err) : res.render('Admin/order',{result, title:'Completed Orders',msg:'completed'})
+//        })
+//     }
+//     else {
+//        pool.query(`select b.* , 
+//     (select c.code from client c where c.id = b.clientid) as clientcode,
+//     (select a.name from agent a where a.id = b.agentid) as agentname,
+//     (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
+//     from final_booking b where b.status = 'cancelled'  order by id desc`,(err,result)=>{
+//            err ? console.log(err) : res.render('Admin/order',{result, title:'Cancelled Orders',msg:'cancel'})
+//        })
+//     }
    
       
-   })
+//    })
+
+
+
+
+router.get('/orders/:type',(req,res)=>{
+  if(req.params.type == 'runnning'){
+     pool.query(`SELECT b.* , 
+     (select p.product_code from product p where p.id = b.bookingid) as product_code,
+     (select p.style_code from product p where p.id = b.bookingid) as style_code,
+     (select a.name from agent a where a.id = b.agentid) as agent_name
+
+     from booking b where b.status != 'completed' and b.status != 'cancelled'  order by id desc`,(err,result)=>{
+         err ? console.log(err) : res.render('Admin/order',{result, title:'Running Orders',msg:'running'})
+     })
+  }
+  else if(req.params.type=='completed'){
+     pool.query(`SELECT b.* , 
+     (select p.product_code from product p where p.id = b.bookingid) as product_code,
+     (select p.style_code from product p where p.id = b.bookingid) as style_code,
+     (select a.name from agent a where a.id = b.agentid) as agent_name
+
+     from booking b where b.status = 'completed'  order by id desc`,(err,result)=>{
+         err ? console.log(err) : res.render('Admin/order',{result, title:'Completed Orders',msg:'completed'})
+     })
+  }
+  else {
+     pool.query(`SELECT b.* , 
+     (select p.product_code from product p where p.id = b.bookingid) as product_code,
+     (select p.style_code from product p where p.id = b.bookingid) as style_code,
+     (select a.name from agent a where a.id = b.agentid) as agent_name
+
+     from booking b where b.status = 'cancelled'  order by id desc`,(err,result)=>{
+         err ? console.log(err) : res.render('Admin/order',{result, title:'Cancelled Orders',msg:'cancel'})
+     })
+  }
+ 
+    
+ })
+
+
+
+ router.get('/edit-oroder',(req,res)=>{
+  pool.query(`select * from booking where id = '${req.query.orderid}'`,(err,result)=>{
+    if(err) throw err;
+    else {
+      console.log(result)
+      res.render('Admin/edit-order',{result})
+    }
+  })
+ })
+
+
+ router.post('/update/order/quantity',(req,res)=>{
+  console.log(req.body)
+  let total_price = (req.body.quantity) * (req.body.price)
+  pool.query(`update booking set quantity = '${req.body.quantity}' , total_price = '${total_price}' where id = '${req.body.bookingid}'`,(err,result)=>{
+    if(err) throw err;
+    else {
+      pool.query(`select sum(total_price) as newprice from booking where orderid = '${req.body.orderid}'`,(err,result)=>{
+        if(err) throw err;
+        else {
+          let newprice = result[0].newprice
+          console.log('new',newprice)
+          pool.query(`update final_booking set price = '${newprice}' where orderid = '${req.body.orderid}'`,(err,result)=>{
+            if(err) throw err;
+            else{
+              res.redirect('/admin/dashboard/orders/runnning')
+            }
+          })
+        }
+      })
+    }
+  })
+ })
 
 
 
@@ -363,6 +636,17 @@ router.get('/low-stock',(req,res)=>{
 
 
 
+
+router.get('/style/list',(req,res)=>{
+   
+  pool.query(`select * from style`,(err,result)=>{
+      err ? console.log(err) : res.render('Admin/style-list',{result, title:'Style List',msg:'running'})
+  })
+
+})
+
+
+
 router.get('/client/list',(req,res)=>{
    
     pool.query(`select * from client`,(err,result)=>{
@@ -397,17 +681,39 @@ router.get('/view-client',(req,res)=>{
 
 
    router.get('/reports',(req,res)=>{
-    var query = `select b.* , 
-    (select c.code from client c where c.id = b.clientid) as clientcode,
-       (select a.name from agent a where a.id = b.agentid) as agentname,
-    (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
-     from final_booking b where date between '${req.query.from_date}' and '${req.query.to_date}';`
-    
-    pool.query(query,(err,result)=>{
-        if(err) throw err;
-     //    00else res.render('Admin/transaction-talent-hunt',{result})
- else res.json(result)  
- })
+
+if(req.query.client == 'all_client'){
+  var query = `SELECT b.* , 
+  (select p.product_code from product p where p.id = b.bookingid) as product_code,
+  (select p.style_code from product p where p.id = b.bookingid) as style_code,
+  (select a.name from agent a where a.id = b.agentid) as agent_name
+   from booking b where date between '${req.query.from_date}' and '${req.query.to_date}';`
+  
+  pool.query(query,(err,result)=>{
+      if(err) throw err;
+   //    00else res.render('Admin/transaction-talent-hunt',{result})
+else res.json(result)  
+})
+
+}
+else{
+  
+
+  var query = `SELECT b.* , 
+  (select p.product_code from product p where p.id = b.bookingid) as product_code,
+  (select p.style_code from product p where p.id = b.bookingid) as style_code,
+  (select a.name from agent a where a.id = b.agentid) as agent_name
+   from booking b where clientid = '${req.query.client}' and date between '${req.query.from_date}' and '${req.query.to_date}';`
+  console.log('run')
+  pool.query(query,(err,result)=>{
+      if(err) throw err;
+   //    00else res.render('Admin/transaction-talent-hunt',{result})
+else res.json(result)  
+})
+
+
+}
+
 })
 
 
@@ -484,48 +790,33 @@ else {
 
 
 
+function importExcelData2MySQL(filePath) {
+  // File path.
+  console.log(filePath);
+  readXlsxFile(filePath).then((rows) => {
+    const data = rows.slice(1); // Exclude the header row
 
-function importExcelData2MySQL(filePath){
+    const values = data.map((row) => [
+      row[0],
+      row[1],
+      row[2],
+      row[3],
+      row[4],
+      row[5],
+      row[6],
+    ]);
 
-    
-    // File path.
-    console.log(filePath)
-    readXlsxFile(filePath).then((rows) => {
+    const query =
+      'INSERT INTO product (product_code, style_code, name, categoryid, small_description, quantity, price) VALUES ?';
 
-
-        for (let i = 1; i < rows.length; i++) {
-            const product_code = rows[i][0];
-            const style_code = rows[i][1];
-            const name = rows[i][2];
-            const categoryid = rows[i][3];
-            const small_description = rows[i][4];
-            const quantity = rows[i][5];
-            const price = rows[i][6];
-
-
-            pool.query(`INSERT INTO product (product_code, style_code, name, categoryid, small_description, quantity , price) VALUES ('${product_code}' , '${style_code}' , '${name}' , '${categoryid}' ,  '${small_description}' , '${quantity}' , '${price}')`, (err, result) => {
-                if (err) {
-                  console.error(err);
-                } else {
-                  console.log(result);
-                }
-              });
-
-
-        }
-
-    // `rows` is an array of rows
-    // each row being an array of cells.     
-    console.log('saahahs',rows);
-let query = 'INSERT INTO product (product_code, style_code, name, categoryid, small_description, price, quantity, keyword) VALUES ?';
-
-    pool.query(query,[rows],(err,result)=>{
-        if(err) console.log(err)
-        else console.log(result) 
-    })
-
-    })
-
+    pool.query(query, [values], (err, result) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(result);
+      }
+    });
+  });
 }
 
 
@@ -605,18 +896,30 @@ else {
 
 
 
+
+
+
+
 function importExcelData2MySQL1(filePath) {
-    let query = 'INSERT INTO client_prices (client_code, style_code, price) VALUES ?';
-  
-    readXlsxFile(filePath)
-      .then((rows) => {
-        console.log('rows', rows.length);
-  
-        for (let i = 1; i < rows.length; i++) {
-          const clientCode = rows[i][0];
-          const styleCode = rows[i][1];
-          const price = rows[i][2];
-  
+  let query = 'INSERT INTO client_prices (client_code, style_code, price) VALUES ?';
+
+  readXlsxFile(filePath)
+    .then((rows) => {
+      console.log('rows', rows.length);
+
+      for (let i = 1; i < rows.length; i++) {
+        const clientCode = rows[i][0];
+        const styleCode = rows[i][1];
+        const price = rows[i][2];
+        const action = rows[i][3];
+
+        if(action == 'delete'){
+       pool.query(`delete from client_prices where client_code = '${clientCode}' and style_code = '${styleCode}'`,(err,result)=>{
+        if(err) console.log(err)
+        else console.log('done')
+       })
+        }
+        else{
           pool.query(
             `SELECT * FROM client_prices WHERE client_code = '${clientCode}' AND style_code = '${styleCode}'`,
             (err, result) => {
@@ -647,11 +950,21 @@ function importExcelData2MySQL1(filePath) {
             }
           );
         }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+
+        
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+
+
+
+
+
+
 
 
 
@@ -734,46 +1047,67 @@ else {
 
 
 function importExcelData2MySQL2(filePath) {
-    readXlsxFile(filePath)
-      .then((rows) => {
-        console.log('rows', rows.length);
-  
-        for (let i = 1; i < rows.length; i++) {
-          const productCode = rows[i][0];
-          const quantity = rows[i][1];
-          const action = rows[i][2];
-  
-          if (action == 'add' || action == 'replace') {
-            pool.query(
-              `UPDATE product SET quantity = quantity + ${quantity} WHERE product_code = '${productCode}'`,
-              (err, result) => {
-                if (err) {
-                  console.error(err);
-                } else {
-                  console.log(result);
-                }
-              }
-            );
-          } else if (action === 'reduce') {
-            pool.query(
-              `UPDATE product SET quantity = quantity - ${quantity} WHERE product_code = '${productCode}'`,
-              (err, result) => {
-                if (err) {
-                  console.error(err);
-                } else {
-                  console.log(result);
-                }
-              }
-            );
-          } else {
-            console.log(`Invalid action: ${action}`);
-          }
+  readXlsxFile(filePath)
+    .then((rows) => {
+      console.log('rows', rows.length);
+
+      const updateQuery = 'UPDATE product SET quantity = quantity + ? WHERE product_code IN (?)';
+      const deleteQuery = 'DELETE FROM product WHERE product_code IN (?)';
+
+      const updatesBulkData = [];
+      const deletesBulkData = [];
+
+      for (let i = 1; i < rows.length; i++) {
+        const productCode = rows[i][0];
+        const quantity = rows[i][1];
+        const action = rows[i][2];
+
+        if (action == 'Add' || action == 'replace') {
+          updatesBulkData.push([quantity, productCode]);
+        } else if (action === 'reduce') {
+          updatesBulkData.push([-quantity, productCode]);
+        } else if (action === 'delete') {
+          deletesBulkData.push(productCode);
+        } else {
+          console.log(`Invalid action: ${action}`);
         }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+      }
+
+      // Perform bulk updates
+      if (updatesBulkData.length > 0) {
+      
+        updatesBulkData.forEach(([quantity, productCode]) => {
+          pool.query(updateQuery, [quantity, productCode], (err, result) => {
+            if (err) {
+              console.error('Error in bulk updates:', err);
+            } else {
+              console.log('Bulk updates completed');
+            }
+          });
+        });
+      }
+
+      // Perform bulk deletes
+      if (deletesBulkData.length > 0) {
+        pool.query(deleteQuery, [deletesBulkData], (err, result) => {
+          if (err) {
+            console.error('Error in bulk deletes:', err);
+          } else {
+            console.log('Bulk deletes completed');
+          }
+        });
+      }
+    })
+    .catch((error) => {
+      console.error('Error in reading Excel file:', error);
+    });
+}
+
+
+
+
+
+
   
 
 
@@ -785,7 +1119,6 @@ function importExcelData2MySQL2(filePath) {
         else {
            let clientid = result[0].clientid;
            var query1 = `select b.*,
-           (select p.icon from product p where p.id = b.bookingid) as product_image,
            (select p.name from product p where p.id = b.bookingid) as product_name,
            (select f.discountedPrice from final_booking f where f.orderid = b.orderid) as payable_amount,
            (select f.price from final_booking f where f.orderid = b.orderid) as net_amount,
@@ -805,6 +1138,307 @@ function importExcelData2MySQL2(filePath) {
     })
    })
 
+
+
+
+
+
+
+
+
+
+
+   
+router.post('/style/insert',upload.fields([{ name: 'image', maxCount: 1 }, { name: 'icon', maxCount: 8 } ,  { name: 'image1', maxCount: 8 }  ]),(req,res)=>{
+  let body = req.body
+console.log('s')
+  console.log(req.body)
+
+  var today = new Date();
+  var dd = today.getDate();
+  
+  var mm = today.getMonth()+1; 
+  var yyyy = today.getFullYear();
+  if(dd<10) 
+  {
+      dd='0'+dd;
+  } 
+  
+  if(mm<10) 
+  {
+      mm='0'+mm;
+  } 
+  today = yyyy+'-'+mm+'-'+dd;
+
+  body['created_date'] = today
+
+
+  if(req.files.image1){
+      body['image'] = req.files.image[0].filename;
+      body['icon'] = req.files.icon[0].filename;
+      body['image1'] = req.files.image1[0].filename;
+
+   console.log(req.body)
+     pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+         err ? console.log(err) : res.json({msg : 'success'})
+     })
+  }
+
+else if(req.files.icon){
+
+  
+
+  body['image'] = req.files.image[0].filename;
+  body['icon'] = req.files.icon[0].filename;
+
+  console.log(req.files.image[0].filename)
+ 
+
+console.log(req.body)
+ pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+     err ? console.log(err) : res.json({msg : 'success'})
+ })
+}
+else {
+  body['image'] = req.files.image[0].filename;
+
+   importExcelData2MySQLstyle('public/images/' + req.files.image[0].filename);
+
+
+   res.redirect('/Admin/dashboard/store-listing/excel')
+
+//  console.log(req.body)
+//    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+//        err ? console.log(err) : res.json({msg : 'success'})
+//    })
+}
+
+
+  
+ 
+})
+
+
+
+// function importExcelData2MySQLstyle(filePath) {
+// // File path.
+// console.log(filePath);
+// readXlsxFile(filePath).then((rows) => {
+//   const data = rows.slice(1); // Exclude the header row
+
+//   const values = data.map((row) => [
+//     row[0],
+//     row[1],
+  
+//   ]);
+
+//   const query =
+//     'INSERT INTO style (name, code) VALUES ?';
+
+//   pool.query(query, [values], (err, result) => {
+//     if (err) {
+//       console.error(err);
+//     } else {
+//       console.log(result);
+//     }
+//   });
+// });
+// }
+
+
+
+
+function importExcelData2MySQLstyle(filePath) {
+  // File path.
+  console.log(filePath);
+  readXlsxFile(filePath).then((rows) => {
+    const data = rows.slice(1); // Exclude the header row
+
+    const values = data.map((row) => [
+      row[0],
+      row[1],
+      row[2], // New column for action
+    ]);
+
+    const insertQuery =
+      'INSERT INTO style (name, code) VALUES ?';
+    const deleteQuery =
+      'DELETE FROM style WHERE code IN (?)';
+
+      const insertValues = values
+      .filter((row) => row[2] === 'add')
+      .map((row) => [row[0], row[1]]); // Only include the first two columns
+    
+      const deleteValues = values
+      .filter((row) => row[2] === 'delete')
+      .map((row) => row[1]);
+
+    if (insertValues.length > 0) {
+      pool.query(insertQuery, [insertValues], (err, result) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('Insert query executed successfully.');
+          console.log(result);
+        }
+      });
+    }
+
+    if (deleteValues.length > 0) {
+      pool.query(deleteQuery, [deleteValues], (err, result) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('Delete query executed successfully.');
+          console.log(result);
+        }
+      });
+    }
+  });
+}
+
+
+
+
+
+
+
+
+router.post('/update/order',upload.fields([{ name: 'image', maxCount: 1 }, { name: 'icon', maxCount: 8 } ,  { name: 'image1', maxCount: 8 }  ]),(req,res)=>{
+  let body = req.body
+console.log('s')
+  console.log(req.body)
+
+  var today = new Date();
+  var dd = today.getDate();
+  
+  var mm = today.getMonth()+1; 
+  var yyyy = today.getFullYear();
+  if(dd<10) 
+  {
+      dd='0'+dd;
+  } 
+  
+  if(mm<10) 
+  {
+      mm='0'+mm;
+  } 
+  today = yyyy+'-'+mm+'-'+dd;
+
+  body['created_date'] = today
+
+
+  if(req.files.image1){
+      body['image'] = req.files.image[0].filename;
+      body['icon'] = req.files.icon[0].filename;
+      body['image1'] = req.files.image1[0].filename;
+
+   console.log(req.body)
+     pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+         err ? console.log(err) : res.json({msg : 'success'})
+     })
+  }
+
+else if(req.files.icon){
+
+  
+
+  body['image'] = req.files.image[0].filename;
+  body['icon'] = req.files.icon[0].filename;
+
+  console.log(req.files.image[0].filename)
+ 
+
+console.log(req.body)
+ pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+     err ? console.log(err) : res.json({msg : 'success'})
+ })
+}
+else {
+  body['image'] = req.files.image[0].filename;
+
+   importExcelData2MySQLOrder('public/images/' + req.files.image[0].filename);
+
+
+   res.redirect('/Admin/dashboard/store-listing/excel')
+
+//  console.log(req.body)
+//    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+//        err ? console.log(err) : res.json({msg : 'success'})
+//    })
+}
+
+
+  
+ 
+})
+
+
+
+
+
+function importExcelData2MySQLOrder(filePath) {
+  let query = 'INSERT INTO client_prices (client_code, style_code, price) VALUES ?';
+
+  var today = new Date();
+  var dd = today.getDate();
+  
+  var mm = today.getMonth()+1; 
+  var yyyy = today.getFullYear();
+  if(dd<10) 
+  {
+      dd='0'+dd;
+  } 
+  
+  if(mm<10) 
+  {
+      mm='0'+mm;
+  } 
+  today = yyyy+'-'+mm+'-'+dd;
+
+  readXlsxFile(filePath)
+    .then((rows) => {
+      console.log('rows', rows.length);
+
+      for (let i = 1; i < rows.length; i++) {
+        const orderid = rows[i][0];
+        const bookingid = rows[i][1];
+        const status = rows[i][2];
+
+        pool.query(
+          `Update booking set status = '${status}' , updated_date = '${today}' where orderid = '${orderid}' AND bookingid = '${bookingid}'`,
+          (err, result) => {
+            if (err) {
+              console.error(err);
+            } else {
+
+              pool.query(`select * from booking where orderid = '${orderid}' and status = 'pending'`,(err,result)=>{
+                if(err) throw err;
+                else if(result[0]){
+                  console.log(result)
+                }
+                else{
+                  pool.query(`Update final_booking set status = '${status}' ,updated_date = '${today}' where orderid = '${orderid}'`,(err,result)=>{
+                    if(err) console.log(err)
+                    else {
+                      console.log(result);
+                    
+                }
+              })
+
+            } 
+              })
+
+
+            }
+          }
+        );
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
 
   
 module.exports = router;

@@ -10,7 +10,8 @@ const pool = mysql.createPool({
     password :"AVNS_y2INtIf0l_w0ZJgiY29",
     database:"inventory",
     port:25060,
-   multipleStatements: true
+   multipleStatements: true,
+   connectionLimit: 10,
  })
 
 

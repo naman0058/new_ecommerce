@@ -28,18 +28,24 @@
                                     <table id="example" class="display" style="min-width: 845px">
                                         <thead>
                                             <tr>
-                                                <th>Order ID</th>
 
-                                                <th>Customer Name</th>
+                                                <th>OrderID</th>
+                                                <th>Booking ID</th>
+                                                <th>Product Code</th>
+                                                <th>Style Code</th>
+                                                <th>Name</th>
                                                 <th>Number</th>
                                                 <th>Address</th>
-                                                <th>Amount</th>
-                                                <th>Total Peice</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Date</th>
                                                 <th>Agent</th>
                                                 <% if(msg == 'running'){ %>
 
                                                 <th>Complete</th>
                                                 <th>Cancel</th>
+                                                <th>Edit Order</th>
+
 
                                                 <% } else { %>
                                                     <th>Last Update</th>
@@ -56,16 +62,20 @@
 
                                             <tr>
                                                 <td><%=result[i].orderid%></td>
-
+                                                <td><%=result[i].bookingid%></td>
+                                                <td><%=result[i].product_code%></td>
+                                                <td><%=result[i].style_code%></td>
                                                 <td><%=result[i].name%></td>
                                                 <td><%=result[i].number%></td>
                                                 <td><%=result[i].address%></td>
-                                                <td><%=result[i].discountedPrice%></td>
-                                                <td><%=result[i].items%></td>
+                                                <td><%=result[i].quantity%></td>
+                                                <td><%=result[i].price%></td>
+                                                <td><%=result[i].date%></td>
                                                 <td><%=result[i].agentname%></td>
                                                 <% if(msg == 'running'){ %>
                                                 <td><a href="/admin/dashboard/update/booking-status?orderid=<%=result[i].orderid%>"><button type="button" class="btn btn-success">Complete</button></a></td>
-                                                <td><a href="/admin/dashboard//update/booking-status?orderid=<%=result[i].orderid%>"><button type="button" class="btn btn-danger">Cancel</button></a></td>
+                                                <td><a href="/admin/dashboard/update/booking-status?orderid=<%=result[i].orderid%>"><button type="button" class="btn btn-danger">Cancel</button></a></td>
+                                                <td><a href="/admin/dashboard/edit-oroder?orderid=<%=result[i].id%>"><button type="button" class="btn btn-danger">Edit Order</button></a></td>
 
                                                 <% } else { %>
                                                     <td><%=result[i].updated_date%></td>
@@ -82,18 +92,23 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th>Order ID</th>
-
-                                                <th>Customer Name</th>
+                                                <th>OrderID</th>
+                                                <th>Booking ID</th>
+                                                <th>Product Code</th>
+                                                <th>Style Code</th>
+                                                <th>Name</th>
                                                 <th>Number</th>
                                                 <th>Address</th>
-                                                <th>Amount</th>
-                                                <th>Total Peice</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Date</th>
                                                 <th>Agent</th>
                                                 <% if(msg == 'running'){ %>
 
                                                     <th>Complete</th>
                                                     <th>Cancel</th>
+                                                <th>Edit Order</th>
+
     
                                                     <% } else { %>
                                                         <th>Last Update</th>

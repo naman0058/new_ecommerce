@@ -16,19 +16,36 @@
                         <h3 class="content-heading mt-3">Reports </h3>
 
                     </div>
+
+
+                    <div class="col-12">
+                        <a href="/admin/dashboard/download-style"><button type="button" class="btn btn-primary stylesheet">Style Sheet Download</button></a>
+                        <a href="/admin/dashboard/download-product"><button type="button" class="btn btn-primary">Product Sheet Download</button></a>
+                        <a href="/admin/dashboard/download-client-prices"><button type="button" class="btn btn-primary">Client Prices Download</button></a>
+                        <a href="/admin/dashboard/download-running-orders"><button type="button" class="btn btn-primary">Running Orders Download</button></a>
+
+
+                    </div>
                    
-                    <div class="col-xl-12 col-xxl-12">
+                    <div class="col-xl-12 col-xxl-12" style="margin-top: 20px;">
                         <div class="card">
                             <div class="card-body">    
                                     <div class="basic-form">
                                         <form action="/admin/dashboard/store-listing/category/insert" method="POST" enctype="multipart/form-data" class="uploadImage">
                                                <div class="form-row">
                                              
-                                                <div class="col-6">
+                                                <div class="col-12">
+                                                    <label>Client</label>
+<select name="clientid" id="clientid" class="form-control">
+    
+</select>
+                                                </div>
+
+                                                <div class="col-6" style="margin-top: 20px;">
                                                     <label>From Date</label>
                                                     <input type="date" class="form-control" name="from_date" id="from_date" placeholder="State">
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top: 20px;">
                                                     <label>To Date</label>
                                                     <input type="date" class="form-control" name="to_date" id="to_date" placeholder="Category Name">
                                                 </div>
@@ -434,8 +451,8 @@
         else {
             let from_date = $('#from_date').val()
             let to_date = $('#to_date').val()
-
-            $.get('/admin/dashboard/reports',{from_date,to_date},data=>{
+           let client = $('#clientid').val()
+            $.get('/admin/dashboard/reports',{from_date,to_date,client},data=>{
                 console.log(data)
                 makeTable(data)
             })
@@ -455,14 +472,21 @@
 <table id="report-table" class="table table-striped mb-0 tab1">
 <thead>
 <tr>
-    <th>Product Name</th>
                                                 <th>OrderID</th>
+                                                <th>Booking ID</th>
+                                                <th>Product Code</th>
+                                                <th>Style Code</th>
+                                                <th>Name</th>
                                                 <th>Number</th>
                                                 <th>Address</th>
-                                                <th>Amount</th>
-                                                <th>Items</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Date</th>
                                                 <th>Agent</th>
                                                 <th>Last Update</th>
+
+
+
 
 </tr>
 </thead>
@@ -472,13 +496,18 @@ $.each(data,(i,item)=>{
 table+=`<tr>
 
 <td>${item.orderid}</td>
+<td>${item.bookingid}</td>
+<td>${item.product_code}</td>
+<td>${item.style_code}</td>
 <td>${item.name}</td>
 <td>${item.number}</td>
 <td>${item.address}</td>
-<td>${item.discountedPrice}</td>
-<td>${item.items}</td>
-<td>${item.agentname}</td>
-<td>${item.updated_date}</td>
+<td>${item.quantity}</td>
+<td>${item.price}</td>
+<td>${item.date}</td>
+<td>${item.agent}</td>
+<td>${item.updated_code}</td>
+
 </tr>`
 })
 table+=`</tbody>
@@ -512,6 +541,34 @@ $('#result').on('click', '#exportBtn1', function() {
             });
           });
     });
+
+
+
+
+$.getJSON(`/api/get-client`, data => {
+    categories = data
+    fillDropDown('clientid', data, 'Choose Client', 0)
+  
+})
+
+
+
+function fillDropDown(id, data, label, selectedid = 0) {
+    $(`#${id}`).empty()
+    $(`#${id}`).append($('<option>').val("all_client").text('All Client'))
+
+
+    $.each(data, (i, item) => {
+        if (item.id == selectedid) {
+            $(`#${id}`).append($('<option selected>').val(item.id).text(item.name))
+        } else {
+            $(`#${id}`).append($('<option>').val(item.id).text(item.name))
+        }
+    })
+}
+
+
+
   </script>
 
 

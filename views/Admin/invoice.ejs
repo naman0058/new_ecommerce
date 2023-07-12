@@ -233,33 +233,6 @@ Codepen: https://codepen.io/supah/
                     </tr>
 
 
-                    <% if(result[0][0].net_amount == result[0][0].payable_amount) { %>
-
-                        <% } else { %>
-
-                            
-                    <tr>
-                        <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #000; line-height: 22px; vertical-align: top; text-align:right; ">
-                          <strong>Coupond Code (<%=result[0][0].couponcode_applied%>)</strong>
-                        </td>
-                        <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #000; line-height: 22px; vertical-align: top; text-align:right; ">
-                          <strong>Rs.<%=(+result[0][0].net_amount) - (+result[0][0].payable_amount)%></strong>
-                        </td>
-                      </tr>
-
-
-
-                      <tr>
-                        <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #000; line-height: 22px; vertical-align: top; text-align:right; ">
-                          <strong>Grand Total (Incl.Tax)</strong>
-                        </td>
-                        <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #000; line-height: 22px; vertical-align: top; text-align:right; ">
-                          <strong>Rs.<%=(+result[0][0].payable_amount)%></strong>
-                        </td>
-                      </tr>
-
-                            <% } %>
-
                    
                   </tbody>
                 </table>

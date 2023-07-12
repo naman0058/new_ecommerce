@@ -482,6 +482,98 @@ console.log(req.body)
 
 
 
+
+//    import product function
+
+function importExcelData2MySQL(filePath) {
+    // File path.
+    console.log(filePath);
+    readXlsxFile(filePath).then((rows) => {
+      const data = rows.slice(1); // Exclude the header row
+  
+      const values = data.map((row) => [
+        row[0],
+        row[1],
+        row[2],
+        row[3],
+        row[4],
+        row[5],
+        row[6],
+      ]);
+  
+      const query =
+        'INSERT INTO product (product_code, style_code, name, categoryid, small_description, quantity, price) VALUES ?';
+  
+      pool.query(query, [values], (err, result) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log(result);
+        }
+      });
+    });
+  }
+  
+
+
+   // inventory update 
+   
+   function importExcelData2MySQL2(filePath) {
+    readXlsxFile(filePath)
+      .then((rows) => {
+        console.log('rows', rows.length);
+  
+        const updateQuery = 'UPDATE product SET quantity = quantity + ? WHERE product_code IN (?)';
+        const deleteQuery = 'DELETE FROM product WHERE product_code IN (?)';
+  
+        const updatesBulkData = [];
+        const deletesBulkData = [];
+  
+        for (let i = 1; i < rows.length; i++) {
+          const productCode = rows[i][0];
+          const quantity = rows[i][1];
+          const action = rows[i][2];
+  
+          if (action == 'Add' || action == 'replace') {
+            updatesBulkData.push([quantity, productCode]);
+          } else if (action === 'reduce') {
+            updatesBulkData.push([-quantity, productCode]);
+          } else if (action === 'delete') {
+            deletesBulkData.push(productCode);
+          } else {
+            console.log(`Invalid action: ${action}`);
+          }
+        }
+  
+        // Perform bulk updates
+        if (updatesBulkData.length > 0) {
+        
+          updatesBulkData.forEach(([quantity, productCode]) => {
+            pool.query(updateQuery, [quantity, productCode], (err, result) => {
+              if (err) {
+                console.error('Error in bulk updates:', err);
+              } else {
+                console.log('Bulk updates completed');
+              }
+            });
+          });
+        }
+  
+        // Perform bulk deletes
+        if (deletesBulkData.length > 0) {
+          pool.query(deleteQuery, [deletesBulkData], (err, result) => {
+            if (err) {
+              console.error('Error in bulk deletes:', err);
+            } else {
+              console.log('Bulk deletes completed');
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error in reading Excel file:', error);
+      });
+  }
    
 
 module.exports = router;
