@@ -15,7 +15,7 @@ router.get('/get-category',(req,res)=>{
 
 
    router.get('/get-style',(req,res)=>{
-    pool.query(`select * from style order by name`,(err,result)=>{
+    pool.query(`select * from style order by code`,(err,result)=>{
         if(err) throw err;
         else res.json(result)
     })
@@ -63,23 +63,26 @@ router.get('/get-category',(req,res)=>{
    })
 
 
-   router.post('/login',(req,res)=>{
-    pool.query(`select * from agent where number  = '${req.body.number}' and password = '${req.body.password}'`,(err,result)=>{
-        if(err) throw err;
-        else if(result[0]){
-            res.json({
-                msg : 'success',
-                data:result
-            })
-        }
-        else {
-            res.json({
-                msg : 'invalid',
-               
-            })
-        }
-    })
-   })
+   router.post('/login', (req, res) => {
+    const query = 'SELECT * FROM agent WHERE number = ? AND password = ?';
+    const values = [req.body.number, req.body.password];
+  
+    pool.query(query, values, (err, result) => {
+      if (err) {
+        throw err;
+      } else if (result[0]) {
+        res.json({
+          msg: 'success',
+          data: result,
+        });
+      } else {
+        res.json({
+          msg: 'invalid',
+        });
+      }
+    });
+  });
+  
 
 
 
@@ -121,14 +124,14 @@ router.post('/product-list', (req, res) => {
         console.log('done', styleCodes);
   
         pool.query(
-          `SELECT p.*, cp.price, i.image , i.image1 , i.icon FROM product p INNER JOIN client_prices cp ON p.style_code = cp.style_code LEFT JOIN images i ON p.style_code = i.categoryid WHERE p.categoryid = '${req.body.categoryid}' AND p.style_code IN (${styleCodes
+          `SELECT p.*, cp.price, i.image, i.image1, i.icon FROM style p INNER JOIN client_prices cp ON p.code = cp.style_code LEFT JOIN images i ON p.code = i.categoryid WHERE p.name = '${req.body.categoryid}' AND p.code IN (${styleCodes
             .map((code) => `'${code}'`)
-            .join(', ')}) ORDER BY p.name`,
+            .join(', ')}) ORDER BY p.code`,
           (err, result) => {
             if (err) {
               throw err;
             } else {
-                console.log(result)
+                // console.log(result)
               res.json(result);
             }
           }
@@ -394,36 +397,48 @@ console.log(req.body)
 
 
   router.post('/dashboard',(req,res)=>{
-    var query = `select count(id) as count from final_booking where date = CURDATE();`
-    var query1 = `select sum(discountedPrice) as sum from final_booking where date = CURDATE();`
-    var query2 = `SELECT COUNT(id) AS count FROM final_booking GROUP BY YEAR(date), MONTH(date) ORDER BY YEAR(date), MONTH(date);`
-    var query3 = `SELECT sum(discountedPrice) AS count FROM final_booking GROUP BY YEAR(date), MONTH(date) ORDER BY YEAR(date), MONTH(date);`
-    var query4 = `select count(id) as count from final_booking where status = 'running';`
-    var query5 = `select count(id) as count from final_booking where status = 'completed';`
+    console.log(req.body)
+    var query = `select count(id) as count from final_booking where date = CURDATE() and agentid = '${req.body.agentid}';`
+    var query1 = `select sum(discountedPrice) as sum from final_booking where date = CURDATE() and agentid = '${req.body.agentid}';`
+    var query2 = `SELECT COUNT(id) AS count FROM final_booking WHERE agentid = '${req.body.agentid}' AND YEAR(date) = YEAR(CURRENT_DATE()) AND MONTH(date) = MONTH(CURRENT_DATE());`
+    var query3 = `SELECT sum(discountedPrice) AS count FROM final_booking where agentid = '${req.body.agentid}' AND YEAR(date) = YEAR(CURRENT_DATE()) AND MONTH(date) = MONTH(CURRENT_DATE());`
+    var query4 = `select count(id) as count from final_booking where status = 'running' and agentid = '${req.body.agentid}';`
+    var query5 = `select count(id) as count from final_booking where status = 'completed' and agentid = '${req.body.agentid}';`
 
     pool.query(query+query1+query2+query3+query4+query5,(err,result)=>{
         if(err) throw err;
-        else res.json(result)
-    })
-
-
-  })
-
-
-
-  router.post('/get-orders',(req,res)=>{
-    console.log(req.body)
-    pool.query(`SELECT b.*,
-    (SELECT COUNT(id) FROM booking bo WHERE bo.orderid = b.orderid) AS total_item,
-    (SELECT sum(quantity) FROM booking bo WHERE bo.orderid = b.orderid) AS total_piece
-  FROM final_booking b
-  WHERE status = '${req.body.status}' AND agentid = '${req.body.agentid}' order by id desc`,(err,result)=>{
-        if(err) throw err;
         else {
-            res.json(result)
+          console.log(result)
+          res.json(result)
         }
     })
+
+
   })
+
+
+
+  router.post('/get-orders', (req, res) => {
+    const { status, agentid } = req.body;
+  
+    const query = `SELECT b.*, 
+      (SELECT COUNT(id) FROM booking bo WHERE bo.orderid = b.orderid) AS total_item,
+      (SELECT SUM(quantity) FROM booking bo WHERE bo.orderid = b.orderid) AS total_piece
+      FROM final_booking b
+      WHERE status = ? AND agentid = ?
+      ORDER BY id DESC`;
+  
+    const values = [status, agentid];
+  
+    pool.query(query, values, (err, result) => {
+      if (err) {
+        throw err;
+      } else {
+        res.json(result);
+      }
+    });
+  });
+  
 
 
 
@@ -575,5 +590,17 @@ function importExcelData2MySQL(filePath) {
       });
   }
    
+
+
+  router.get('/check-ivr',(req,res)=>{
+    let query = req.query;
+    console.log(query)
+    pool3.query(`insert into recordings set ?`,query,(err,result)=>{
+      if(err) throw err;
+      else {
+        res.json({status:'OK'})
+      }
+    })
+  })
 
 module.exports = router;

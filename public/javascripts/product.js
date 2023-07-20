@@ -35,9 +35,9 @@ function fillDropDown(id, data, label, selectedid = 0) {
 
     $.each(data, (i, item) => {
         if (item.id == selectedid) {
-            $(`#${id}`).append($('<option selected>').val(item.id).text(item.name))
+            $(`#${id}`).append($('<option selected>').val(item.code).text(item.code))
         } else {
-            $(`#${id}`).append($('<option>').val(item.id).text(item.name))
+            $(`#${id}`).append($('<option>').val(item.code).text(item.code))
         }
     })
 }
