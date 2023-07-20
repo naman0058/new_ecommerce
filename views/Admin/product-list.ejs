@@ -28,6 +28,7 @@
                                     <table id="example" class="display" style="min-width: 845px">
                                         <thead>
                                             <tr>
+                                                <th>Image</th>
                                                 <th>Style Name</th>
                                                 <th>Style Code</th>
                                                 <th>Action</th>
@@ -39,7 +40,11 @@
 
 <% for(i=0;i<result.length;i++) { %>
 
+
                                             <tr>
+
+<td><img src='/images/<%=result[i].image%>' style="width: 50px;"></td>
+
                                                 <td><%=result[i].name%></td>
 
                                                 <td><%=result[i].code%></td>
@@ -52,6 +57,8 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
+                                                <th>Image</th>
+
                                                 <th>Style Name</th>
                                                 <th>Style Code</th>
                                                 <th>Action</th>

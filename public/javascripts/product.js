@@ -69,7 +69,7 @@ table+=`<tr>
 </td>
 
 
-<td>${item.categoryname}</td>
+<td>${item.categoryid}</td>
     
 
 

@@ -627,7 +627,7 @@ router.get('/low-stock',(req,res)=>{
 
    router.get('/product-list',(req,res)=>{
    
-    pool.query(`select * from style`,(err,result)=>{
+    pool.query(`select s.* , (select i.image from images i where i.categoryid = s.code) as image from style s`,(err,result)=>{
         err ? console.log(err) : res.render('Admin/product-list',{result, title:'Product List',msg:'running'})
     })
  
