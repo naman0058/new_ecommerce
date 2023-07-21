@@ -151,6 +151,7 @@ router.post('/product-list', (req, res) => {
     pool.query(`select * from product where id = '${req.body.bookingid}'`,(err,result)=>{
         if(err) throw err;
         else{
+          console.log('re',result)
             let quantity = result[0].quantity;
             if(quantity >= req.body.quantity){
  
@@ -599,6 +600,20 @@ function importExcelData2MySQL(filePath) {
       if(err) throw err;
       else {
         res.json({status:'OK'})
+      }
+    })
+  })
+
+
+
+
+  router.post('/get-products',(req,res)=>{
+    pool.query(`select * from product where style_code = '${req.body.style_code}'`,(err,result)=>{
+      if(err) throw err;
+      else {
+        res.json({
+          product:{variants:result}
+        })
       }
     })
   })
