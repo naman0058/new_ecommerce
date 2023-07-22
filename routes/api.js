@@ -241,7 +241,9 @@ router.post('/product-list', (req, res) => {
    router.post('/mycart',(req,res)=>{
     pool.query(`select c.*,
     (select i.image from images i where i.categoryid = (select p.style_code from product p where p.id = c.bookingid)) as product_image,
-    (select p.name from product p where p.id = c.bookingid) as product_name
+    (select p.name from product p where p.id = c.bookingid) as product_name,
+    (select p.product_code from product p where p.id = c.bookingid) as product_code
+
         from cart c where c.agentid = '${req.body.agentid}'`,(err,result)=>{
         if(err) throw err;
         else {
@@ -261,7 +263,9 @@ console.log(req.body)
            var query1 = `select c.*,
            
            (select i.image from images i where i.categoryid = (select p.style_code from product p where p.id = c.bookingid)) as product_image,
-           (select p.name from product p where p.id = c.bookingid) as product_name
+           (select p.name from product p where p.id = c.bookingid) as product_name,
+           (select p.product_code from product p where p.id = c.bookingid) as product_code
+
             from cart c where c.agentid = '${req.body.agentid}';`
            var query2 = `select * from client where code = '${clientid}';`
            pool.query(query1+query2,(err,result)=>{
@@ -452,6 +456,7 @@ console.log(req.body)
            var query1 = `select b.*,
            (select i.image from images i where i.categoryid = (select p.style_code from product p where p.id = b.bookingid)) as product_image,
            (select p.name from product p where p.id = b.bookingid) as product_name,
+           (select p.product_code from product p where p.id = b.bookingid) as product_code,
            (select f.discountedPrice from final_booking f where f.orderid = b.orderid) as payable_amount,
            (select f.couponcode from final_booking f where f.orderid = b.orderid) as couponcode_applied
 
