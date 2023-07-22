@@ -342,6 +342,105 @@ else {
 
 
 
+router.post('/images/insert',upload.fields([{ name: 'image', maxCount: 1 }, { name: 'icon', maxCount: 8 } ,  { name: 'image1', maxCount: 8 }  ]),(req,res)=>{
+  let body = req.body
+console.log('s')
+  console.log(req.body)
+
+  var today = new Date();
+  var dd = today.getDate();
+  
+  var mm = today.getMonth()+1; 
+  var yyyy = today.getFullYear();
+  if(dd<10) 
+  {
+      dd='0'+dd;
+  } 
+  
+  if(mm<10) 
+  {
+      mm='0'+mm;
+  } 
+  today = yyyy+'-'+mm+'-'+dd;
+
+  body['created_date'] = today
+
+
+  if(req.files.image1){
+      body['image'] = req.files.image[0].filename;
+      body['icon'] = req.files.icon[0].filename;
+      body['image1'] = req.files.image1[0].filename;
+
+   console.log(req.body)
+   pool.query(`select * from images where categoryid = '${req.body.categoryid}'`,(err,result)=>{
+    if(err) throw err;
+    else if(result[0]){
+      res.json({msg : 'success'})
+    }
+    else{
+      pool.query(`insert into images set ?`,body,(err,result)=>{
+        err ? console.log(err) : res.json({msg : 'success'})
+    })
+    }
+   })
+    
+  }
+
+else if(req.files.icon){
+
+  
+
+  body['image'] = req.files.image[0].filename;
+  body['icon'] = req.files.icon[0].filename;
+
+  console.log(req.files.image[0].filename)
+ 
+console.log(req.body)
+pool.query(`select * from images where categoryid = '${req.body.categoryid}'`,(err,result)=>{
+  if(err) throw err;
+  else if(result[0]){
+    res.json({msg : 'success'})
+  }
+  else{
+    pool.query(`insert into images set ?`,body,(err,result)=>{
+      err ? console.log(err) : res.json({msg : 'success'})
+  })
+  }
+ })
+}
+
+
+else if(req.files.image){
+
+  body['image'] = req.files.image[0].filename;
+  // body['icon'] = req.files.icon[0].filename;
+console.log(req.body)
+pool.query(`select * from images where categoryid = '${req.body.categoryid}'`,(err,result)=>{
+  if(err) throw err;
+  else if(result[0]){
+    res.json({msg : 'success'})
+  }
+  else{
+    pool.query(`insert into images set ?`,body,(err,result)=>{
+      err ? console.log(err) : res.json({msg : 'success'})
+  })
+  }
+ })
+}
+
+else {
+  // body['icon'] = req.files.icon[0].filename;
+console.log(req.body)
+ pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
+     err ? console.log(err) : res.json({msg : 'success'})
+ })
+}
+
+
+  
+ 
+})
+
 
 
 
