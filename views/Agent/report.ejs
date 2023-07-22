@@ -1,9 +1,6 @@
 <%- include ('./storeListingHeader.ejs') %>
 
 
-
-
-
         <!--**********************************
             Content body start
         ***********************************-->
@@ -16,79 +13,44 @@
               
                 <div class="row" id='insertdiv'>
                     <div class="col-12">
-                        <h3 class="content-heading mt-3">New Client <span style="float: right;cursor: pointer;color:#1f5ab0;" id="show">Show All</span></h3>
+                        <h3 class="content-heading mt-3">Reports </h3>
+
+                    </div>
+
+
+                    <div class="col-12">
+                        <a href="/agent/dashboard/download-style"><button type="button" class="btn btn-primary stylesheet">Style Sheet Download</button></a>
+                        <a href="/agent/dashboard/download-product"><button type="button" class="btn btn-primary">Product Sheet Download</button></a>
+                        <a href="/agent/dashboard/download-running-orders"><button type="button" class="btn btn-primary">Running Orders Download</button></a>
+
 
                     </div>
                    
-                    <div class="col-xl-12 col-xxl-12">
+                    <div class="col-xl-12 col-xxl-12" style="margin-top: 20px;">
                         <div class="card">
                             <div class="card-body">    
                                     <div class="basic-form">
-                                        <form action="/admin/dashboard/store-listing/client/insert" method="POST" enctype="multipart/form-data" class="uploadImage">
+                                        <form action="/admin/dashboard/store-listing/category/insert" method="POST" enctype="multipart/form-data" class="uploadImage">
+                                               <div class="form-row">
                                              
-
-
-                                            <div class="form-row" style="margin-top: 20px;">
-                                             
-                                                <div class="col-6">
-                                                    <label>Agent Name</label>
-                                                    <select id="agentid" name="agentid" class="form-control"></select>
-                                                </div>
-                                             
-                                             
-                                                <div class="col-6">
-                                                    <label>Client Name</label>
-                                                    <input type="text" class="form-control" name="name" placeholder="Client Name" required>
-                                                </div>
-                                               
-
- 
-                                             
-
-
-                                             
-                                              
-                                            </div>
-
-
-
-                                         
-
-
-                                            <div class="form-row" style="margin-top: 20px;">
-
-                                                <div class="col-6">
-                                                    <label>Client Number</label>
-                                                    <input type="text" class="form-control" name="number" placeholder="Client Number" required>
-                                                </div>
-
-
-                                                <div class="col-6">
-                                                    <label>Client Code</label>
-                                                    <input type="text" class="form-control" name="code" placeholder="Client Code" required>
-                                                </div>
-                                           
-                                            </div>
-
-
-
-                                            
-
-                                            <div class="form-row" style="margin-top: 20px;">
-
                                                 <div class="col-12">
-                                                    <label>Client Address</label>
-                                                    <input type="text" class="form-control" name="address" placeholder="Client Address" required>
+                                                    <label>Client</label>
+<select name="clientid" id="clientid" class="form-control">
+    
+</select>
                                                 </div>
 
-
+                                                <div class="col-6" style="margin-top: 20px;">
+                                                    <label>From Date</label>
+                                                    <input type="date" class="form-control" name="from_date" id="from_date" placeholder="State">
+                                                </div>
+                                                <div class="col-6" style="margin-top: 20px;">
+                                                    <label>To Date</label>
+                                                    <input type="date" class="form-control" name="to_date" id="to_date" placeholder="Category Name">
+                                                </div>
                                               
                                             </div>
-
-
-
-
-                               <button class="btn btn-primary" type="submit" style="margin-top:20px;float:right">Save</button>
+                               <button class="btn btn-primary show-reports" type="button" style="margin-top:20px;float:right">Show Reports</button>
 
                                         </form>
                                     </div>
@@ -118,148 +80,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" id='editdiv'>
-                    <div class="col-12">
-    <h6 class="card-header"><span><button type="button" class="btn btn-primary show" id="back1" style="margin:10px">Back</button></span>Edit Data</h6>
-
-                        <h3 class="content-heading mt-3">New Client    <span style="float: right;cursor: pointer;color:#1f5ab0;" id="show">Show All</span></h3>
-
-                    </div>
-                   
-                    <div class="col-xl-12 col-xxl-12">
-                        <div class="card">
-                            <div class="card-body">    
-                                    <div class="basic-form">
-                                               <div class="form-row">
-                                                <div class="col-12">
-                                                    <label>Client ID</label>
-                                                    <input type="text" class="form-control" id="pid" readonly>
-                                                </div>
-                                             
-                                            
-                                               
-                                              
-                                            </div>
-
-
-
-                                            <div class="form-row" style="margin-top: 20px;">
-
-
-                                                <div class="col-6">
-                                                    <label>Category</label>
-                                                    <select id="pagentid" name="pagentid" class="form-control"></select>
-                                                </div>
-
-                                                <div class="col-6">
-                                                    <label>Client Name</label>
-                                                    <input type="text" class="form-control" id="pname" placeholder="Client Name" required>
-                                                </div>
-                                               
-
-
-
-
-                                                
-                                              
-                                            </div>
-
-
-
-                                       
-
-
-
-                                            <div class="form-row" style="margin-top: 20px;">
-
-                                                <div class="col-6">
-                                                    <label>Client Number</label>
-                                                    <input type="text" class="form-control" id="pnumber" placeholder="Client Number" required>
-                                                </div>
-
-                                                <div class="col-6">
-                                                    <label>Client Code</label>
-                                                    <input type="text" class="form-control" id="pcode" placeholder="Client Code" required>
-                                                </div>
-                                               
-                                               
-                                              
-                                            </div>
-
-
-
-                                            <div class="form-row" style="margin-top: 20px;">
-
-                                                <div class="col-12">
-                                                    <label>Client Address</label>
-                                                    <input type="text" class="form-control" id="paddress" placeholder="Client Address" required>
-                                                </div>
-
-
-                                              
-                                            </div>
-
-
-                                             
-                                              
-                                            </div>
-                               <button class="btn btn-primary" type="button" id="update" style="margin-top:20px;float:right">Update</button>
-
-                                    </div>
-                                    
-                                  
-                                    
-                                   
-                                    
-                             
-                                    
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-                <div class="card mb-4" id="updateimagediv">
-                    <h6 class="card-header"><span><button type="button" class="btn btn-primary show" id="back2" style="margin:10px">Back</button></span> Upload Image</h6>
-                    <div class="card-body">
-                    
-                        <form action="/admin/dashboard/store-listing/client/update-image" method="POST" enctype="multipart/form-data">
-                            <div class="form-row">
-                       
-                                <div class="form-group col-md-6 col-lg-6">
-                                    <label class="form-label">ID</label>
-                                    <input type="text" class="form-control" placeholder="Email" id="peid" name="id" readonly>
-                                    <div class="clearfix"></div>
-                                    </div>
-                    
-                    
-                            <div class="form-group col-md-6 col-lg-6">
-                            <label class="form-label">Image</label>
-                            <input type="file" class="form-control" name='image' placeholder="Password">
-                            <div class="clearfix"></div>
-                            </div>
-                          
-
-
-
-                            <!-- <div class="form-group col-md-4 col-lg-4">
-                                <label class="form-label">Image</label>
-                                <input type="file" class="form-control" name='icon' placeholder="Password">
-                                <div class="clearfix"></div>
-                                </div> -->
-                                </div>
-                            
-                            
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            </form>
-                    </div>
-                    </div>
-                    
-
-
+               
             </div>
         </div>
         <!--**********************************
@@ -488,7 +309,8 @@
         Main wrapper end
     ***********************************-->
 
-   
+
+
     <%- include ('./footer.ejs') %>
 
 
@@ -519,10 +341,144 @@
 
 
 
-<script src="/javascripts/client.js"></script>
 
 
 
+
+
+
+<script src="/javascripts/category.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+
+
+
+
+<script>
+    $('.show-reports').click(function(){
+        if( $('#from_date').val() == '' || $('#from_date').val() == [] ) alert('Choose From Date')
+        else if ( $('#to_date').val() == '' || $('#to_date').val() == [] ) alert('Choose To Date')
+        else {
+            let from_date = $('#from_date').val()
+            let to_date = $('#to_date').val()
+           let client = $('#clientid').val()
+            $.get('/admin/dashboard/reports',{from_date,to_date,client},data=>{
+                console.log(data)
+                makeTable(data)
+            })
+        }
+    })
+
+
+ 
+
+
+    function makeTable(data){
+    let table = ` <div class="table-responsive">
+
+        <button type="button" class="btn btn-primary float-right" id="exportBtn1" style="float: right;margin-bottom:20px">Export Data</button>
+
+  
+<table id="report-table" class="table table-striped mb-0 tab1">
+<thead>
+<tr>
+                                                <th>OrderID</th>
+                                                <th>Booking ID</th>
+                                                <th>Product Code</th>
+                                                <th>Style Code</th>
+                                                <th>Name</th>
+                                                <th>Number</th>
+                                                <th>Address</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Date</th>
+                                                <th>Agent</th>
+                                                <th>Last Update</th>
+
+
+
+
+</tr>
+</thead>
+<tbody>`
+
+$.each(data,(i,item)=>{
+table+=`<tr>
+
+<td>${item.orderid}</td>
+<td>${item.bookingid}</td>
+<td>${item.product_code}</td>
+<td>${item.style_code}</td>
+<td>${item.name}</td>
+<td>${item.number}</td>
+<td>${item.address}</td>
+<td>${item.quantity}</td>
+<td>${item.price}</td>
+<td>${item.date}</td>
+<td>${item.agent}</td>
+<td>${item.updated_code}</td>
+
+</tr>`
+})
+table+=`</tbody>
+</table>
+</div>
+
+  
+<!-- End Row -->`
+    $('#result').html(table)
+    $('#result').show()
+}
+
+
+
+
+</script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+$('#result').on('click', '#exportBtn1', function() {
+
+      
+          TableToExcel.convert(document.getElementById("report-table"), {
+              name: "Report.xlsx",
+              sheet: {
+              name: "Sheet1"
+              }
+            });
+          });
+    });
+
+
+
+
+$.getJSON(`/api/get-client`, data => {
+    categories = data
+    fillDropDown('clientid', data, 'Choose Client', 0)
+  
+})
+
+
+
+function fillDropDown(id, data, label, selectedid = 0) {
+    $(`#${id}`).empty()
+    $(`#${id}`).append($('<option>').val("all_client").text('All Client'))
+
+
+    $.each(data, (i, item) => {
+        if (item.id == selectedid) {
+            $(`#${id}`).append($('<option selected>').val(item.id).text(item.name))
+        } else {
+            $(`#${id}`).append($('<option>').val(item.id).text(item.name))
+        }
+    })
+}
+
+
+
+  </script>
 
 
 

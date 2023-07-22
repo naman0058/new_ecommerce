@@ -114,6 +114,8 @@ $('#result').on('click', '.edits', function() {
      $('#pnumber').val(result.number)
      $('#pcode').val(result.code)
      $('#pagentid').val(result.agentid)
+     $('#paddress').val(result.address)
+
 
     
    
@@ -137,6 +139,8 @@ $('#update').click(function(){  //data insert in database
         code: $('#pcode').val(),
         number: $('#pnumber').val(),
         agentid: $('#pagentid').val(),
+        address: $('#paddress').val(),
+
 
       
       

@@ -211,7 +211,7 @@ var table = 'admin'
 
 
 router.get('/',(req,res)=>{
-    if(req.session.adminid){
+    if(req.session.agentid){
         var query = `select count(id) as today_order from booking where date = curdate();`
         var query1 = `select count(id) as total_order from booking;`
         var query2 = `select sum(price) as today_revenue from booking where date = curdate();`
@@ -227,15 +227,15 @@ router.get('/',(req,res)=>{
 
 
         pool.query(query+query1+query2+query3+query4+query5+query6+query7+query8+query9,(err,result)=>{
-            // res.render('Admin/Dashboard',{msg : '',result})
+            // res.render('Agent/Dashboard',{msg : '',result})
             if(err) throw err;
-else res.render('Admin/Dashboard',{msg : '',result})
+else res.render('Agent/Dashboard',{msg : '',result})
         })
 
 
    }
     else{
-        res.render('Admin/login',{msg : '* Invalid Credentials'})
+        res.render('Agent/login',{msg : '* Invalid Credentials'})
 
     }
 })
@@ -243,11 +243,11 @@ else res.render('Admin/Dashboard',{msg : '',result})
 
 
 router.get('/store-listing/:name',(req,res)=>{
-    if(req.session.adminid){
-    res.render('Admin/'+req.params.name)
+    if(req.session.agentid){
+    res.render('Agent/'+req.params.name)
     }
     else {
-        res.render('Admin/login',{msg : '* Invalid Credentials'})
+        res.render('Agent/login',{msg : '* Invalid Credentials'})
 
     }
 })
@@ -448,7 +448,7 @@ router.post('/store-listing/:name/update-image',upload.fields([{ name: 'image', 
             //     description:'successfully update'
             // })
 
-            res.redirect(`/admin/dashboard/store-listing/${req.params.name}`)
+            res.redirect(`/agent/dashboard/store-listing/${req.params.name}`)
         }
     })
 
@@ -469,7 +469,7 @@ router.get('/orders/:type',(req,res)=>{
     (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
 
        from final_booking b where b.status != 'completed' and b.status != 'cancelled'  order by id desc`,(err,result)=>{
-           err ? console.log(err) : res.render('Admin/order',{result, title:'Running Orders',msg:'running'})
+           err ? console.log(err) : res.render('Agent/order',{result, title:'Running Orders',msg:'running'})
        })
     }
     else if(req.params.type=='completed'){
@@ -480,7 +480,7 @@ router.get('/orders/:type',(req,res)=>{
 
    
        from final_booking b where b.status = 'completed'  order by id desc`,(err,result)=>{
-           err ? console.log(err) : res.render('Admin/order',{result, title:'Completed Orders',msg:'completed'})
+           err ? console.log(err) : res.render('Agent/order',{result, title:'Completed Orders',msg:'completed'})
        })
     }
     else {
@@ -489,7 +489,7 @@ router.get('/orders/:type',(req,res)=>{
     (select a.name from agent a where a.id = b.agentid) as agentname,
     (select sum(quantity) from booking bo where bo.orderid = b.orderid) as items
     from final_booking b where b.status = 'cancelled'  order by id desc`,(err,result)=>{
-           err ? console.log(err) : res.render('Admin/order',{result, title:'Cancelled Orders',msg:'cancel'})
+           err ? console.log(err) : res.render('Agent/order',{result, title:'Cancelled Orders',msg:'cancel'})
        })
     }
    
@@ -506,8 +506,8 @@ router.get('/orders/:type',(req,res)=>{
 //      (select p.style_code from product p where p.id = b.bookingid) as style_code,
 //      (select a.name from agent a where a.id = b.agentid) as agent_name
 
-//      from booking b where b.status != 'completed' and b.status != 'cancelled'  order by id desc`,(err,result)=>{
-//          err ? console.log(err) : res.render('Admin/order',{result, title:'Running Orders',msg:'running'})
+//      from final_booking b where b.status != 'completed' and b.status != 'cancelled'  order by id desc`,(err,result)=>{
+//          err ? console.log(err) : res.render('Agent/order',{result, title:'Running Orders',msg:'running'})
 //      })
 //   }
 //   else if(req.params.type=='completed'){
@@ -516,8 +516,8 @@ router.get('/orders/:type',(req,res)=>{
 //      (select p.style_code from product p where p.id = b.bookingid) as style_code,
 //      (select a.name from agent a where a.id = b.agentid) as agent_name
 
-//      from booking b where b.status = 'completed'  order by id desc`,(err,result)=>{
-//          err ? console.log(err) : res.render('Admin/order',{result, title:'Completed Orders',msg:'completed'})
+//      from final_booking b where b.status = 'completed'  order by id desc`,(err,result)=>{
+//          err ? console.log(err) : res.render('Agent/order',{result, title:'Completed Orders',msg:'completed'})
 //      })
 //   }
 //   else {
@@ -526,8 +526,8 @@ router.get('/orders/:type',(req,res)=>{
 //      (select p.style_code from product p where p.id = b.bookingid) as style_code,
 //      (select a.name from agent a where a.id = b.agentid) as agent_name
 
-//      from booking b where b.status = 'cancelled'  order by id desc`,(err,result)=>{
-//          err ? console.log(err) : res.render('Admin/order',{result, title:'Cancelled Orders',msg:'cancel'})
+//      from final_booking b where b.status = 'cancelled'  order by id desc`,(err,result)=>{
+//          err ? console.log(err) : res.render('Agent/order',{result, title:'Cancelled Orders',msg:'cancel'})
 //      })
 //   }
  
@@ -546,7 +546,7 @@ router.get('/get-orders',(req,res)=>{
     if(err) throw err;
     else {
       console.log(result)
-      res.render('Admin/get-order',{result})
+      res.render('Agent/get-order',{result})
     }
   })
  })
@@ -557,7 +557,7 @@ router.get('/get-orders',(req,res)=>{
     if(err) throw err;
     else {
       console.log(result)
-      res.render('Admin/edit-order',{result})
+      res.render('Agent/edit-order',{result})
     }
   })
  })
@@ -577,7 +577,7 @@ router.get('/get-orders',(req,res)=>{
           pool.query(`update final_booking set price = '${newprice}' where orderid = '${req.body.orderid}'`,(err,result)=>{
             if(err) throw err;
             else{
-              res.redirect('/admin/dashboard/orders/runnning')
+              res.redirect('/agent/dashboard/orders/runnning')
             }
           })
         }
@@ -614,7 +614,7 @@ router.get('/get-orders',(req,res)=>{
           pool.query(`update final_booking set status = 'completed' , updated_date = '${today}' where orderid = '${req.query.orderid}'`,(err,result)=>{
             if(err) throw err;
             else{
-         res.redirect('/admin/dashboard/orders/runnning')
+         res.redirect('/agent/dashboard/orders/runnning')
 
             }
           })
@@ -632,7 +632,7 @@ router.get('/low-stock',(req,res)=>{
    
        pool.query(`select p.* , (select c.name from category c where c.id = p.categoryid) as categoryname
         from product p order by p.quantity asc`,(err,result)=>{
-           err ? console.log(err) : res.render('Admin/low-stock',{result, title:'Running Orders',msg:'running'})
+           err ? console.log(err) : res.render('Agent/low-stock',{result, title:'Running Orders',msg:'running'})
        })
     
       
@@ -644,7 +644,7 @@ router.get('/low-stock',(req,res)=>{
    router.get('/product-list',(req,res)=>{
    
     pool.query(`select s.* , (select i.image from images i where i.categoryid = s.code) as image from style s`,(err,result)=>{
-        err ? console.log(err) : res.render('Admin/product-list',{result, title:'Product List',msg:'running'})
+        err ? console.log(err) : res.render('Agent/product-list',{result, title:'Product List',msg:'running'})
     })
  
    
@@ -656,7 +656,7 @@ router.get('/low-stock',(req,res)=>{
 router.get('/style/list',(req,res)=>{
    
   pool.query(`select * from style`,(err,result)=>{
-      err ? console.log(err) : res.render('Admin/style-list',{result, title:'Style List',msg:'running'})
+      err ? console.log(err) : res.render('Agent/style-list',{result, title:'Style List',msg:'running'})
   })
 
 })
@@ -666,7 +666,7 @@ router.get('/style/list',(req,res)=>{
 router.get('/client/list',(req,res)=>{
    
     pool.query(`select * from client`,(err,result)=>{
-        err ? console.log(err) : res.render('Admin/client-list',{result, title:'Client List',msg:'running'})
+        err ? console.log(err) : res.render('Agent/client-list',{result, title:'Client List',msg:'running'})
     })
  
    
@@ -677,7 +677,7 @@ router.get('/client/list',(req,res)=>{
 router.get('/view-product',(req,res)=>{
    
     pool.query(`select p.* from product p where style_code = '${req.query.code}' order by p.quantity asc`,(err,result)=>{
-        err ? console.log(err) : res.render('Admin/low-stock',{result, title:'Product List',msg:'running'})
+        err ? console.log(err) : res.render('Agent/low-stock',{result, title:'Product List',msg:'running'})
     })
  
    
@@ -688,7 +688,7 @@ router.get('/view-product',(req,res)=>{
 router.get('/view-client',(req,res)=>{
    
     pool.query(`select p.* from client_prices p where client_code = '${req.query.code}' order by id desc`,(err,result)=>{
-        err ? console.log(err) : res.render('Admin/price-list',{result, title:'Client Price List',msg:'running'})
+        err ? console.log(err) : res.render('Agent/price-list',{result, title:'Client Price List',msg:'running'})
     })
  
    
@@ -707,7 +707,7 @@ if(req.query.client == 'all_client'){
   
   pool.query(query,(err,result)=>{
       if(err) throw err;
-   //    00else res.render('Admin/transaction-talent-hunt',{result})
+   //    00else res.render('Agent/transaction-talent-hunt',{result})
 else res.json(result)  
 })
 
@@ -723,7 +723,7 @@ else{
   console.log('run')
   pool.query(query,(err,result)=>{
       if(err) throw err;
-   //    00else res.render('Admin/transaction-talent-hunt',{result})
+   //    00else res.render('Agent/transaction-talent-hunt',{result})
 else res.json(result)  
 })
 
@@ -791,7 +791,7 @@ else {
      importExcelData2MySQL('public/images/' + req.files.image[0].filename);
 
   
-     res.redirect('/admin/dashboard/store-listing/excel')
+     res.redirect('/agent/dashboard/store-listing/excel')
 
 //  console.log(req.body)
 //    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
@@ -896,7 +896,7 @@ else {
      importExcelData2MySQL1('public/images/' + req.files.image[0].filename);
 
   
-     res.redirect('/admin/dashboard/store-listing/client_excel')
+     res.redirect('/agent/dashboard/store-listing/client_excel')
 
 //  console.log(req.body)
 //    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
@@ -1046,7 +1046,7 @@ else {
      importExcelData2MySQL2('public/images/' + req.files.image[0].filename);
 
   
-     res.redirect('/admin/dashboard/store-listing/client_excel')
+     res.redirect('/agent/dashboard/store-listing/client_excel')
 
 //  console.log(req.body)
 //    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
@@ -1147,7 +1147,7 @@ function importExcelData2MySQL2(filePath) {
            pool.query(query1+query2,(err,result)=>{
             if(err) throw err;
             else {
-                res.render('Admin/invoice',{result})
+                res.render('Agent/invoice',{result})
                 // res.json(result)
             }
            })
@@ -1222,7 +1222,7 @@ else {
    importExcelData2MySQLstyle('public/images/' + req.files.image[0].filename);
 
 
-   res.redirect('/admin/dashboard/store-listing/excel')
+   res.redirect('/agent/dashboard/store-listing/excel')
 
 //  console.log(req.body)
 //    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
@@ -1377,7 +1377,7 @@ else {
    importExcelData2MySQLOrder('public/images/' + req.files.image[0].filename);
 
 
-   res.redirect('/admin/dashboard/store-listing/excel')
+   res.redirect('/agent/dashboard/store-listing/excel')
 
 //  console.log(req.body)
 //    pool.query(`insert into ${req.params.name} set ?`,body,(err,result)=>{
@@ -1389,6 +1389,8 @@ else {
   
  
 })
+
+
 
 
 
@@ -1445,6 +1447,8 @@ function importExcelData2MySQLOrder(filePath) {
       console.error(error);
     });
 }
+
+
 
 
 module.exports = router;

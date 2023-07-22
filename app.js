@@ -11,7 +11,10 @@ var cors = require('cors')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var admin = require('./routes/Admin/Login');
-var adminDashboard = require('./routes/Admin/Dashboard')
+var adminDashboard = require('./routes/Admin/Dashboard');
+
+var agent = require('./routes/Agent/Login');
+var agentdashboard = require('./routes/Agent/Dashboard')
 var api = require('./routes/api')
 
 
@@ -49,6 +52,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin',admin);
 app.use('/admin/dashboard',adminDashboard);
+app.use('/agent',agent);
+app.use('/agent/dashboard',agentdashboard);
 app.use('/api',api);
 
 

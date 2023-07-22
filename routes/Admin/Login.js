@@ -33,7 +33,7 @@ pool.query(`select * from ${table} where email = '${req.body.email}' and passwor
 
    router.get('/logout',(req,res)=>{
      req.session.adminid = null;
-     res.redirect('/Admin')
+     res.redirect('/admin')
    })
 
 
