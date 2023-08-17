@@ -1450,5 +1450,14 @@ function importExcelData2MySQLOrder(filePath) {
 
 
 
+router.get('/check-code',(req,res)=>{
+  console.log('query',req.query)
+  res.json({
+    status : 200,
+    pincode: req.query.digits
+  })
+})
+
+
 
 module.exports = router;
