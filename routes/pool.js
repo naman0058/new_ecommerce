@@ -5,11 +5,11 @@ var mysql = require('mysql')
 
 const pool = mysql.createPool({
 
-    host :'db-mysql-blr1-55215-do-user-13029391-0.b.db.ondigitalocean.com',
-    user :"doadmin",
-    password :"AVNS_BUlYRoHmtHSKlCjHe5y",
+    host :'68.178.175.210',
+    user :"root",
+    password :"Kinsey@2023",
     database:"inventory",
-    port:25060,
+    port:3306,
    multipleStatements: true,
    connectionLimit: 10,
  })

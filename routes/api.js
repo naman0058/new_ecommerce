@@ -19,8 +19,7 @@ router.get('/get-category',(req,res)=>{
         if(err) throw err;
         else res.json(result)
     })
-   
-   })
+      })
 
 
    router.get('/get-images',(req,res)=>{
