@@ -4,7 +4,7 @@ var pool =  require('../pool');
 
 
 var table = 'admin'
-
+var a = 'naman'
 
 router.get('/',(req,res)=>{
   res.render('Admin/login',{msg : ''})
