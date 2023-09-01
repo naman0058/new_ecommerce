@@ -11,7 +11,7 @@ const pool = mysql.createPool({
     database:"inventory",
     port:3306,
    multipleStatements: true,
-   connectionLimit: 10,
+
  })
 
 
